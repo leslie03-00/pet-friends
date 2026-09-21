@@ -65,7 +65,7 @@
   }
   .toast.show{opacity:1;transform:translate(-50%,0)}
 
-  /* ---------- 面板 ---------- */
+  /* ---------- 底部面板 ---------- */
   .panel{
     flex:none;display:flex;flex-direction:column;gap:13px;
     padding:14px;border-radius:22px;
@@ -77,26 +77,23 @@
   .stat{display:flex;align-items:center;gap:7px}
   .stat .ico{font-size:14px;width:17px;text-align:center;flex:none;line-height:1}
   .track{flex:1;height:7px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden}
-  .fill{height:100%;width:0;border-radius:99px;
-    transition:width .5s cubic-bezier(.2,.9,.3,1),background .4s}
-  .stat .val{width:24px;text-align:right;font-size:11px;color:#93a1c4;
-    font-variant-numeric:tabular-nums;flex:none}
+  .fill{height:100%;width:0;border-radius:99px;transition:width .5s cubic-bezier(.2,.9,.3,1),background .4s}
+  .stat .val{width:24px;text-align:right;font-size:11px;color:#93a1c4;font-variant-numeric:tabular-nums;flex:none}
 
   .actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   .act{
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
     padding:11px 4px;border-radius:16px;font-family:inherit;font-size:12px;
-    color:#e8eeff;cursor:pointer;
-    border:1px solid rgba(255,255,255,.1);
+    color:#e8eeff;cursor:pointer;border:1px solid rgba(255,255,255,.1);
     background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
     transition:transform .12s,background .2s,box-shadow .2s;
   }
   .act:active{transform:scale(.93);background:rgba(255,255,255,.18)}
   .act .emoji{font-size:20px;line-height:1;filter:drop-shadow(0 2px 5px rgba(0,0,0,.4))}
 
-  /* ---------- 选择界面 ---------- */
+  /* ---------- 选择界面 & 互动菜单弹窗 ---------- */
   .overlay {
-    position: absolute; inset: 0; background: #0d1020; z-index: 100;
+    position: absolute; inset: 0; background: rgba(13,16,32,0.95); z-index: 100;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 24px; transition: opacity 0.5s ease, visibility 0.5s;
   }
@@ -107,6 +104,7 @@
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
   .overlay p { font-size: 13px; color: #93a1c4; margin-bottom: 24px; }
+  
   .pet-options {
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 12px; width: 100%; max-width: 360px; margin-bottom: 24px;
@@ -116,13 +114,10 @@
     border-radius: 18px; padding: 16px 8px; display: flex; flex-direction: column;
     align-items: center; gap: 8px; cursor: pointer; transition: all 0.25s;
   }
-  .pet-card:hover { background: rgba(255,255,255,.1); }
-  .pet-card.active {
-    border-color: #6ee7b7; background: rgba(110,231,183,.15);
-    box-shadow: 0 0 20px rgba(110,231,183,.2); transform: translateY(-4px);
-  }
+  .pet-card.active { border-color: #6ee7b7; background: rgba(110,231,183,.15); box-shadow: 0 0 20px rgba(110,231,183,.2); transform: translateY(-4px); }
   .pet-card .emoji-icon { font-size: 36px; }
   .pet-card .pet-label { font-size: 13px; font-weight: 500; }
+  
   .name-input {
     width: 100%; max-width: 360px; padding: 14px 18px; border-radius: 16px;
     border: 1px solid rgba(255,255,255,.15); background: rgba(0,0,0,.3);
@@ -130,6 +125,7 @@
     text-align: center; margin-bottom: 20px; transition: border-color 0.3s;
   }
   .name-input:focus { border-color: #6ee7b7; }
+  
   .start-btn {
     width: 100%; max-width: 360px; padding: 15px; border-radius: 16px; border: none;
     background: linear-gradient(135deg, #6ee7b7, #3b82f6); color: #fff;
@@ -138,35 +134,51 @@
   }
   .start-btn.ready { opacity: 1; pointer-events: auto; }
   .start-btn.ready:active { transform: scale(0.96); }
+
+  /* 互动菜单弹窗（底部的选择器） */
+  .action-menu {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 50;
+    background: rgba(18,26,48,0.95); border-top: 1px solid rgba(255,255,255,.1);
+    backdrop-filter: blur(20px); border-radius: 24px 24px 0 0;
+    padding: 20px 16px calc(20px + env(safe-area-inset-bottom,0px));
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+  }
+  .action-menu.show { transform: translateY(0); }
+  .action-menu h3 { font-size: 15px; margin: 0 0 15px 0; color: #e8eeff; text-align: center; }
+  .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .menu-item {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 16px; padding: 12px 4px; display: flex; flex-direction: column;
+    align-items: center; gap: 6px; cursor: pointer; transition: background 0.2s, transform 0.1s;
+  }
+  .menu-item:active { transform: scale(0.92); background: rgba(255,255,255,.15); }
+  .menu-item .item-emoji { font-size: 24px; }
+  .menu-item .item-label { font-size: 11px; color: #93a1c4; }
+  .menu-close {
+    margin-top: 15px; width: 100%; padding: 12px; border-radius: 14px;
+    background: rgba(255,255,255,.05); border: none; color: #93a1c4;
+    font-size: 14px; font-family: inherit; cursor: pointer;
+  }
 </style>
 </head>
 <body>
 
 <div class="app">
-  <!-- 选择界面遮罩 -->
+  <!-- 选择宠物遮罩层 -->
   <div class="overlay" id="startScreen">
     <h1>领养你的小伙伴</h1>
     <p>选择一只喜欢的宠物，给它取个名字吧</p>
-    
     <div class="pet-options" id="petOptions">
-      <div class="pet-card" data-type="cat">
-        <span class="emoji-icon">🐱</span>
-        <span class="pet-label">小猫</span>
-      </div>
-      <div class="pet-card" data-type="dog">
-        <span class="emoji-icon">🐶</span>
-        <span class="pet-label">小狗</span>
-      </div>
-      <div class="pet-card" data-type="pig">
-        <span class="emoji-icon">🐷</span>
-        <span class="pet-label">小猪</span>
-      </div>
+      <div class="pet-card" data-type="cat"><span class="emoji-icon">🐱</span><span class="pet-label">小猫</span></div>
+      <div class="pet-card" data-type="dog"><span class="emoji-icon">🐶</span><span class="pet-label">小狗</span></div>
+      <div class="pet-card" data-type="pig"><span class="emoji-icon">🐷</span><span class="pet-label">小猪</span></div>
     </div>
-
     <input type="text" id="petNameInput" class="name-input" placeholder="给它取个名字..." maxlength="8" autocomplete="off">
     <button class="start-btn" id="startBtn">开始陪伴</button>
   </div>
 
+  <!-- 顶部信息栏 -->
   <div class="header">
     <span class="avatar"></span>
     <span class="pet-name" id="headerName">小糯米</span>
@@ -176,11 +188,13 @@
     </div>
   </div>
 
+  <!-- 画布舞台 -->
   <div class="stage">
     <canvas id="pet"></canvas>
     <div class="toast" id="toast"></div>
   </div>
 
+  <!-- 底部操作栏 -->
   <div class="panel">
     <div class="stats" id="stats"></div>
     <div class="actions">
@@ -189,6 +203,15 @@
       <button class="act" data-act="clean"><span class="emoji">🛁</span>洗澡</button>
       <button class="act" data-act="sleep"><span class="emoji">💤</span>睡觉</button>
     </div>
+  </div>
+
+  <!-- 互动菜单弹窗（食物/洗澡选择器） -->
+  <div class="action-menu" id="actionMenu">
+    <h3 id="menuTitle">选择食物</h3>
+    <div class="menu-grid" id="menuGrid">
+      <!-- JS 动态填充 -->
+    </div>
+    <button class="menu-close" id="menuClose">取消</button>
   </div>
 </div>
 
@@ -202,13 +225,13 @@
   /* =========================================================
      存档 / 状态
   ========================================================= */
-  const SAVE_KEY = 'epet_save_v3'; 
+  const SAVE_KEY = 'epet_save_v4'; 
   
   function freshState() {
     return { 
       petType: null, petName: '小糯米',
       hunger: 85, mood: 85, energy: 85, clean: 85, 
-      age: 0, // 年龄
+      age: 0, 
       last: Date.now() 
     };
   }
@@ -220,11 +243,8 @@
 
     const now = Date.now();
     const mins = Math.max(0, Math.min((now - (s.last || now)) / 60000, 720));
-    
-    // 离线时间也会成长
     s.age = (s.age || 0) + Math.floor(mins / 2); // 每2分钟长1岁
     
-    // 状态衰减
     for (const k of ['hunger', 'mood', 'energy', 'clean']) {
       s[k] = clamp((typeof s[k] === 'number' ? s[k] : 80) - 2.0 * mins);
     }
@@ -233,8 +253,6 @@
   }
 
   let S = loadState();
-  let lastAgeUpdate = Date.now();
-
   function saveState() {
     S.last = Date.now();
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {}
@@ -251,9 +269,9 @@
 
   function getStageMultiplier() {
     const stage = getAgeStage();
-    if (stage === 'baby') return { size: 0.75, decay: 1.5, jump: 1.3, name: '幼年' };
-    if (stage === 'elder') return { size: 1.15, decay: 0.8, jump: 0.6, name: '老年' };
-    return { size: 1.0, decay: 1.0, jump: 1.0, name: '成年' };
+    if (stage === 'baby') return { size: 0.75, decay: 1.5, jump: 1.3 };
+    if (stage === 'elder') return { size: 1.15, decay: 0.8, jump: 0.6 };
+    return { size: 1.0, decay: 1.0, jump: 1.0 };
   }
 
   /* =========================================================
@@ -261,12 +279,8 @@
   ========================================================= */
   let audioCtx = null;
   function initAudio() {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
   }
 
   function playSynthSound() {
@@ -277,12 +291,10 @@
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     
-    // 根据物种和年龄确定参数
-    let freq = 800; 
-    let type = 'sine';
-    if (S.petType === 'cat') { freq = 1000; type = 'sine'; } // 喵
-    if (S.petType === 'dog') { freq = 600; type = 'square'; } // 汪
-    if (S.petType === 'pig') { freq = 300; type = 'sawtooth'; } // 哼
+    let freq = 800, type = 'sine';
+    if (S.petType === 'cat') { freq = 1000; type = 'sine'; }
+    if (S.petType === 'dog') { freq = 600; type = 'square'; }
+    if (S.petType === 'pig') { freq = 300; type = 'sawtooth'; }
 
     const stage = getAgeStage();
     if (stage === 'baby') freq *= 1.5;
@@ -290,17 +302,14 @@
 
     osc.type = type;
     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    // 音调下降，模拟叫声
     osc.frequency.exponentialRampToValueAtTime(freq * 0.7, audioCtx.currentTime + 0.15);
     
     gain.gain.setValueAtTime(0, audioCtx.currentTime);
     gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
     
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.2);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.2);
   }
 
   /* =========================================================
@@ -317,8 +326,7 @@
     const r = stage.getBoundingClientRect();
     if (r.width < 10 || r.height < 10) return;
     DPR = Math.min(window.devicePixelRatio || 1, 2);
-    W = r.width;
-    H = r.height;
+    W = r.width; H = r.height;
     canvas.width  = Math.round(W * DPR);
     canvas.height = Math.round(H * DPR);
     canvas.style.width  = W + 'px';
@@ -330,16 +338,12 @@
   if (window.ResizeObserver) new ResizeObserver(resize).observe(stage);
 
   /* =========================================================
-     动画状态
+     动画状态与粒子
   ========================================================= */
   const anim = {
     bounce: 0, blinking: false, blinkT: 0, blinkNext: 1800,
     sleep: 0, lookX: 0, lookY: 0, lookTX: 0, lookTY: 0
   };
-
-  /* =========================================================
-     粒子
-  ========================================================= */
   const particles = [];
 
   function spawn(x, y, n, kind) {
@@ -364,8 +368,7 @@
   }
 
   function heartPath(x, y, s) {
-    ctx.beginPath();
-    ctx.moveTo(x, y + s * 0.42);
+    ctx.beginPath(); ctx.moveTo(x, y + s * 0.42);
     ctx.bezierCurveTo(x - s * 1.05, y - s * 0.42, x - s * 0.52, y - s * 1.18, x, y - s * 0.36);
     ctx.bezierCurveTo(x + s * 0.52, y - s * 1.18, x + s * 1.05, y - s * 0.42, x, y + s * 0.42);
     ctx.closePath();
@@ -375,21 +378,29 @@
     for (const p of particles) {
       const k = p.life / p.max;
       const alpha = k < 0.15 ? k / 0.15 : 1 - (k - 0.15) / 0.85;
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, alpha);
+      ctx.save(); ctx.globalAlpha = Math.max(0, alpha);
       ctx.translate(p.x, p.y); ctx.rotate(p.rot);
 
       if (p.kind === 'heart') {
         ctx.fillStyle = '#ff7eb3'; heartPath(0, 0, p.size * 0.62); ctx.fill();
-      } else if (p.kind === 'bubble') {
-        ctx.beginPath(); ctx.arc(0, 0, p.size * 0.55, 0, Math.PI * 2);
-        ctx.strokeStyle = '#8fd8ff'; ctx.lineWidth = 1.6; ctx.stroke();
-      } else if (p.kind === 'food') {
-        ctx.fillStyle = '#ffb454'; ctx.beginPath();
-        ctx.arc(0, 0, p.size * 0.42, 0, Math.PI * 2); ctx.fill();
+      } else if (p.kind === 'bubble_soap') {
+        ctx.beginPath(); ctx.arc(0, 0, p.size * 0.45, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(200, 230, 255, 0.6)'; ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.stroke();
+      } else if (p.kind === 'bubble_gel') {
+        ctx.beginPath(); ctx.arc(0, 0, p.size * 0.6, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 182, 193, 0.6)'; ctx.fill();
+        ctx.strokeStyle = '#ffb6c1'; ctx.lineWidth = 1.5; ctx.stroke();
+      } else if (p.kind === 'milk') {
+        ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.3, 0, Math.PI * 2); ctx.fill();
+      } else if (p.kind === 'bread') {
+        ctx.fillStyle = '#d4a373'; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.35, 0, Math.PI * 2); ctx.fill();
+      } else if (p.kind === 'noodle') {
+        ctx.strokeStyle = '#f4a261'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.3, 0, Math.PI); ctx.stroke();
+      } else if (p.kind === 'potato') {
+        ctx.fillStyle = '#e9c46a'; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.4, 0, Math.PI * 2); ctx.fill();
       } else {
-        ctx.fillStyle = '#a9f5d6'; ctx.beginPath();
-        ctx.arc(0, 0, p.size * 0.42, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#a9f5d6'; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.42, 0, Math.PI * 2); ctx.fill();
       }
       ctx.restore();
     }
@@ -400,10 +411,7 @@
   ========================================================= */
   const stars = [];
   for (let i = 0; i < 38; i++) {
-    stars.push({
-      x: Math.random(), y: Math.random() * 0.72,
-      r: rand(0.5, 1.6), ph: Math.random() * Math.PI * 2, sp: rand(0.4, 1.5)
-    });
+    stars.push({ x: Math.random(), y: Math.random() * 0.72, r: rand(0.5, 1.6), ph: Math.random() * Math.PI * 2, sp: rand(0.4, 1.5) });
   }
 
   function drawStars(now) {
@@ -417,19 +425,6 @@
   /* =========================================================
      绘制工具
   ========================================================= */
-  function drawFurEdge(cx, cy, w, h, count, color) {
-    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineCap = 'round';
-    for (let i = 0; i < count; i++) {
-      const angle = (i / count) * Math.PI * 2;
-      const r = 1 + Math.random() * 0.15;
-      const x1 = cx + Math.cos(angle) * w * 0.9 * r;
-      const y1 = cy + Math.sin(angle) * h * 0.9 * r;
-      const x2 = cx + Math.cos(angle) * w * 1.05 * r;
-      const y2 = cy + Math.sin(angle) * h * 1.05 * r;
-      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-    }
-  }
-
   function drawEye(x, y, r, blink, happy) {
     if (happy && blink < 0.05) {
       ctx.beginPath(); ctx.arc(x, y + r * 0.62, r * 0.98, Math.PI * 1.14, Math.PI * 1.86);
@@ -453,107 +448,225 @@
   }
 
   /* =========================================================
-     绘制不同宠物 (带年龄缩放)
+     真实可爱的宠物绘制 (圆润、无海胆线条)
   ========================================================= */
+  
+  // 1. 小猫
   function drawCat(cx, cy, bw, bh, blink, happy) {
-    const baseColor = '#f5f0eb'; const stripeColor = '#c47a3b';
-    const pinkNose = '#ff9eb5';
-    ctx.save(); ctx.beginPath();
-    ctx.ellipse(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 0, 0, Math.PI * 2);
+    const baseColor = '#fcf6f0'; 
+    const stripeColor = '#e08a4b';
+    const darkStripe = '#8c5a3a';
+    const noseColor = '#ff9eb5';
+
+    // 身体 (平滑圆润)
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + bh * 0.15, bw * 1.1, bh * 0.95, 0, 0, Math.PI * 2);
     ctx.fillStyle = baseColor; ctx.fill();
-    drawFurEdge(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 60, 'rgba(200,190,180,0.6)');
-    ctx.beginPath(); ctx.ellipse(cx - bw * 0.3, cy + bh * 0.1, bw * 0.5, bh * 0.6, -0.3, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(196,122,59,0.4)'; ctx.fill();
+    
+    // 尾巴 (圆润带条纹)
+    ctx.beginPath();
+    ctx.moveTo(cx + bw * 0.9, cy + bh * 0.6);
+    ctx.quadraticCurveTo(cx + bw * 1.6, cy + bh * 0.1, cx + bw * 1.2, cy - bh * 0.5);
+    ctx.strokeStyle = stripeColor; ctx.lineWidth = bw * 0.16; ctx.lineCap = 'round'; ctx.stroke();
+    // 尾巴条纹
+    for(let i=0; i<3; i++){
+        ctx.beginPath();
+        ctx.arc(cx + bw*1.15 + i*0.15*bw, cy + bh*0.5 - i*0.3*bh, bw*0.08, 0, Math.PI*2);
+        ctx.fillStyle = darkStripe; ctx.fill();
+    }
+
+    // 虎斑色块（用平滑椭圆叠加）
+    ctx.beginPath();
+    ctx.ellipse(cx - bw * 0.4, cy + bh * 0.2, bw * 0.4, bh * 0.5, -0.2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(224,138,75,0.35)'; ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + bw * 0.3, cy - bh * 0.3, bw * 0.3, bh * 0.25, 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(140,90,58,0.25)'; ctx.fill();
     ctx.restore();
 
-    const earY = cy - bh * 0.8; const earW = bw * 0.5; const earH = bh * 0.6;
-    ctx.beginPath(); ctx.moveTo(cx - bw * 0.5, earY); ctx.lineTo(cx - bw * 0.8, earY - earH); ctx.lineTo(cx - bw * 0.1, earY - earH * 0.8); ctx.closePath();
-    ctx.fillStyle = baseColor; ctx.fill(); ctx.strokeStyle = stripeColor; ctx.lineWidth = 2; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cx - bw * 0.48, earY); ctx.lineTo(cx - bw * 0.7, earY - earH * 0.8); ctx.lineTo(cx - bw * 0.2, earY - earH * 0.7); ctx.closePath();
-    ctx.fillStyle = 'rgba(255,150,175,0.4)'; ctx.fill();
-
-    ctx.beginPath(); ctx.moveTo(cx + bw * 0.5, earY); ctx.lineTo(cx + bw * 0.8, earY - earH); ctx.lineTo(cx + bw * 0.1, earY - earH * 0.8); ctx.closePath();
-    ctx.fillStyle = baseColor; ctx.fill(); ctx.strokeStyle = stripeColor; ctx.lineWidth = 2; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cx + bw * 0.48, earY); ctx.lineTo(cx + bw * 0.7, earY - earH * 0.8); ctx.lineTo(cx + bw * 0.2, earY - earH * 0.7); ctx.closePath();
-    ctx.fillStyle = 'rgba(255,150,175,0.4)'; ctx.fill();
-
-    const eyeY = cy - bh * 0.1; const eyeGap = bw * 0.35; const eyeR = bw * 0.13;
-    drawEye(cx - eyeGap, eyeY, eyeR, blink, happy); drawEye(cx + eyeGap, eyeY, eyeR, blink, happy);
-
-    const noseY = cy + bh * 0.15;
-    ctx.beginPath(); ctx.moveTo(cx - bw * 0.1, noseY); ctx.lineTo(cx + bw * 0.1, noseY); ctx.lineTo(cx, noseY + bh * 0.05); ctx.closePath();
-    ctx.fillStyle = pinkNose; ctx.fill();
-    ctx.beginPath(); ctx.moveTo(cx, noseY + bh * 0.05);
-    if (happy) { ctx.arc(cx - bw * 0.1, noseY + bh * 0.1, bw * 0.1, Math.PI * 1.5, Math.PI * 2); ctx.arc(cx + bw * 0.1, noseY + bh * 0.1, bw * 0.1, Math.PI, Math.PI * 1.5); }
-    else { ctx.arc(cx - bw * 0.1, noseY + bh * 0.15, bw * 0.1, 0, Math.PI); ctx.arc(cx + bw * 0.1, noseY + bh * 0.15, bw * 0.1, 0, Math.PI); }
-    ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2; ctx.stroke();
-  }
-
-  function drawDog(cx, cy, bw, bh, blink, happy) {
-    const baseColor = '#fdfbf7'; const brownColor = '#a06b44'; const darkBrown = '#6b4423';
-    ctx.save(); ctx.beginPath(); ctx.ellipse(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 0, 0, Math.PI * 2);
-    ctx.fillStyle = baseColor; ctx.fill();
-    drawFurEdge(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 60, 'rgba(180,160,140,0.5)');
-    ctx.beginPath(); ctx.ellipse(cx - bw * 0.4, cy + bh * 0.3, bw * 0.4, bh * 0.5, 0.2, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(160,107,68,0.5)'; ctx.fill(); ctx.restore();
-
-    const earY = cy - bh * 0.6; const earH = bh * 0.8;
-    ctx.save(); ctx.beginPath(); ctx.moveTo(cx - bw * 0.5, earY); ctx.quadraticCurveTo(cx - bw * 1.2, earY + bh * 0.2, cx - bw * 0.9, earY + earH); ctx.quadraticCurveTo(cx - bw * 0.6, earY + earH * 0.6, cx - bw * 0.3, earY + bh * 0.1); ctx.closePath();
-    ctx.fillStyle = brownColor; ctx.fill(); drawFurEdge(cx - bw * 0.7, earY + earH * 0.5, bw * 0.3, bh * 0.4, 30, darkBrown); ctx.restore();
-
-    ctx.save(); ctx.beginPath(); ctx.moveTo(cx + bw * 0.5, earY); ctx.quadraticCurveTo(cx + bw * 1.2, earY + bh * 0.2, cx + bw * 0.9, earY + earH); ctx.quadraticCurveTo(cx + bw * 0.6, earY + earH * 0.6, cx + bw * 0.3, earY + bh * 0.1); ctx.closePath();
-    ctx.fillStyle = brownColor; ctx.fill(); drawFurEdge(cx + bw * 0.7, earY + earH * 0.5, bw * 0.3, bh * 0.4, 30, darkBrown); ctx.restore();
-
-    ctx.beginPath(); ctx.ellipse(cx, cy - bh * 0.4, bw * 0.2, bh * 0.25, 0, 0, Math.PI * 2); ctx.fillStyle = baseColor; ctx.fill();
-
-    const eyeY = cy - bh * 0.1; const eyeGap = bw * 0.35; const eyeR = bw * 0.12;
-    drawEye(cx - eyeGap, eyeY, eyeR, blink, happy); drawEye(cx + eyeGap, eyeY, eyeR, blink, happy);
-
-    const noseY = cy + bh * 0.2;
-    ctx.beginPath(); ctx.ellipse(cx, noseY, bw * 0.12, bh * 0.08, 0, 0, Math.PI * 2); ctx.fillStyle = '#1a1a1a'; ctx.fill();
-    ctx.beginPath(); ctx.ellipse(cx - bw * 0.03, noseY - bh * 0.02, bw * 0.03, bh * 0.02, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.fill();
-
-    ctx.beginPath(); ctx.moveTo(cx, noseY + bh * 0.08);
-    if (happy) { ctx.arc(cx - bw * 0.08, noseY + bh * 0.12, bw * 0.08, Math.PI * 1.5, Math.PI * 2); ctx.arc(cx + bw * 0.08, noseY + bh * 0.12, bw * 0.08, Math.PI, Math.PI * 1.5); }
-    else { ctx.arc(cx - bw * 0.08, noseY + bh * 0.15, bw * 0.08, 0, Math.PI); ctx.arc(cx + bw * 0.08, noseY + bh * 0.15, bw * 0.08, 0, Math.PI); }
-    ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2; ctx.stroke();
-  }
-
-  function drawPig(cx, cy, bw, bh, blink, happy) {
-    const pinkBody = '#ffb6c1'; const darkPink = '#ff8fab'; const nosePink = '#ff6b8b';
-    ctx.save(); ctx.beginPath(); ctx.ellipse(cx, cy + bh * 0.15, bw * 1.1, bh * 0.95, 0, 0, Math.PI * 2);
-    ctx.fillStyle = pinkBody; ctx.fill();
-    drawFurEdge(cx, cy + bh * 0.15, bw * 1.1, bh * 0.95, 50, 'rgba(255,140,170,0.6)');
-    ctx.beginPath(); ctx.ellipse(cx, cy + bh * 0.3, bw * 0.6, bh * 0.5, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fill(); ctx.restore();
-
+    // 耳朵 (平滑三角形带弧度)
     const earY = cy - bh * 0.75;
-    ctx.beginPath(); ctx.ellipse(cx - bw * 0.6, earY, bw * 0.25, bh * 0.2, -0.3, 0, Math.PI * 2); ctx.fillStyle = darkPink; ctx.fill();
-    ctx.beginPath(); ctx.ellipse(cx - bw * 0.6, earY, bw * 0.15, bh * 0.12, -0.3, 0, Math.PI * 2); ctx.fillStyle = '#ff9eb5'; ctx.fill();
-    ctx.beginPath(); ctx.ellipse(cx + bw * 0.6, earY, bw * 0.25, bh * 0.2, 0.3, 0, Math.PI * 2); ctx.fillStyle = darkPink; ctx.fill();
-    ctx.beginPath(); ctx.ellipse(cx + bw * 0.6, earY, bw * 0.15, bh * 0.12, 0.3, 0, Math.PI * 2); ctx.fillStyle = '#ff9eb5'; ctx.fill();
+    const earW = bw * 0.5;
+    const earH = bh * 0.55;
+    // 左耳
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.4, earY + bh*0.1);
+    ctx.quadraticCurveTo(cx - bw * 0.7, earY - earH, cx - bw * 0.15, earY - earH*0.7);
+    ctx.quadraticCurveTo(cx - bw * 0.1, earY, cx - bw * 0.4, earY + bh*0.1);
+    ctx.fillStyle = baseColor; ctx.fill();
+    ctx.strokeStyle = stripeColor; ctx.lineWidth = 2.5; ctx.stroke();
+    // 左耳内耳
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.35, earY + bh*0.05);
+    ctx.quadraticCurveTo(cx - bw * 0.55, earY - earH*0.7, cx - bw * 0.2, earY - earH*0.5);
+    ctx.quadraticCurveTo(cx - bw * 0.15, earY - bh*0.05, cx - bw * 0.35, earY + bh*0.05);
+    ctx.fillStyle = 'rgba(255,150,175,0.4)'; ctx.fill();
 
-    const eyeY = cy - bh * 0.1; const eyeGap = bw * 0.4; const eyeR = bw * 0.1;
+    // 右耳
+    ctx.beginPath();
+    ctx.moveTo(cx + bw * 0.4, earY + bh*0.1);
+    ctx.quadraticCurveTo(cx + bw * 0.7, earY - earH, cx + bw * 0.15, earY - earH*0.7);
+    ctx.quadraticCurveTo(cx + bw * 0.1, earY, cx + bw * 0.4, earY + bh*0.1);
+    ctx.fillStyle = baseColor; ctx.fill();
+    ctx.strokeStyle = stripeColor; ctx.lineWidth = 2.5; ctx.stroke();
+    // 右耳内耳
+    ctx.beginPath();
+    ctx.moveTo(cx + bw * 0.35, earY + bh*0.05);
+    ctx.quadraticCurveTo(cx + bw * 0.55, earY - earH*0.7, cx + bw * 0.2, earY - earH*0.5);
+    ctx.quadraticCurveTo(cx + bw * 0.15, earY - bh*0.05, cx + bw * 0.35, earY + bh*0.05);
+    ctx.fillStyle = 'rgba(255,150,175,0.4)'; ctx.fill();
+
+    // 眼睛
+    const eyeY = cy - bh * 0.05;
+    const eyeGap = bw * 0.35;
+    const eyeR = bw * 0.12;
+    drawEye(cx - eyeGap, eyeY, eyeR, blink, happy);
+    drawEye(cx + eyeGap, eyeY, eyeR, blink, happy);
+
+    // 鼻子和嘴巴
+    const noseY = cy + bh * 0.2;
+    ctx.beginPath(); // 鼻子
+    ctx.moveTo(cx - bw * 0.08, noseY);
+    ctx.lineTo(cx + bw * 0.08, noseY);
+    ctx.lineTo(cx, noseY + bh * 0.05);
+    ctx.closePath();
+    ctx.fillStyle = noseColor; ctx.fill();
+    
+    ctx.beginPath(); // 嘴巴
+    ctx.moveTo(cx, noseY + bh * 0.05);
+    if (happy) {
+      ctx.arc(cx - bw * 0.08, noseY + bh * 0.1, bw * 0.08, Math.PI * 1.5, Math.PI * 2);
+      ctx.arc(cx + bw * 0.08, noseY + bh * 0.1, bw * 0.08, Math.PI, Math.PI * 1.5);
+    } else {
+      ctx.arc(cx - bw * 0.08, noseY + bh * 0.12, bw * 0.08, 0, Math.PI);
+      ctx.arc(cx + bw * 0.08, noseY + bh * 0.12, bw * 0.08, 0, Math.PI);
+    }
+    ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2; ctx.stroke();
+
+    // 胡须（干净利落）
+    ctx.strokeStyle = 'rgba(100,100,100,0.4)'; ctx.lineWidth = 1.5;
+    for (let i = 0; i < 3; i++) {
+      const wy = noseY + i * 5 - 5;
+      ctx.beginPath(); ctx.moveTo(cx - bw * 0.15, wy); ctx.lineTo(cx - bw * 0.65, wy - 8 + i * 5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx + bw * 0.15, wy); ctx.lineTo(cx + bw * 0.65, wy - 8 + i * 5); ctx.stroke();
+    }
+  }
+
+  // 2. 小狗 (垂耳)
+  function drawDog(cx, cy, bw, bh, blink, happy) {
+    const baseColor = '#fdfbf7'; const brownColor = '#b07d5b'; const darkBrown = '#7a4c33';
+    
+    // 身体
+    ctx.save();
+    ctx.beginPath(); ctx.ellipse(cx, cy + bh * 0.15, bw * 1.1, bh * 0.95, 0, 0, Math.PI * 2);
+    ctx.fillStyle = baseColor; ctx.fill();
+    
+    // 身体色块
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.4, cy + bh * 0.3, bw * 0.4, bh * 0.5, 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(176,125,91,0.4)'; ctx.fill();
+    ctx.restore();
+
+    // 垂耳（标志性）
+    const earY = cy - bh * 0.5;
+    const earH = bh * 0.9;
+    // 左垂耳
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.5, earY);
+    ctx.quadraticCurveTo(cx - bw * 1.1, earY + bh * 0.2, cx - bw * 0.8, earY + earH);
+    ctx.quadraticCurveTo(cx - bw * 0.5, earY + earH * 0.5, cx - bw * 0.3, earY);
+    ctx.fillStyle = brownColor; ctx.fill();
+    // 右垂耳
+    ctx.beginPath();
+    ctx.moveTo(cx + bw * 0.5, earY);
+    ctx.quadraticCurveTo(cx + bw * 1.1, earY + bh * 0.2, cx + bw * 0.8, earY + earH);
+    ctx.quadraticCurveTo(cx + bw * 0.5, earY + earH * 0.5, cx + bw * 0.3, earY);
+    ctx.fillStyle = brownColor; ctx.fill();
+
+    // 额头白毛
+    ctx.beginPath(); ctx.ellipse(cx, cy - bh * 0.35, bw * 0.25, bh * 0.2, 0, 0, Math.PI * 2);
+    ctx.fillStyle = baseColor; ctx.fill();
+
+    // 眼睛
+    const eyeY = cy - bh * 0.05;
+    const eyeGap = bw * 0.35;
+    const eyeR = bw * 0.12;
+    drawEye(cx - eyeGap, eyeY, eyeR, blink, happy);
+    drawEye(cx + eyeGap, eyeY, eyeR, blink, happy);
+
+    // 大鼻子
+    const noseY = cy + bh * 0.25;
+    ctx.beginPath(); ctx.ellipse(cx, noseY, bw * 0.14, bh * 0.09, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#2b2b2b'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.04, noseY - bh * 0.03, bw * 0.04, bh * 0.02, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fill();
+
+    // 嘴巴
+    ctx.beginPath(); ctx.moveTo(cx, noseY + bh * 0.08);
+    if (happy) {
+      ctx.arc(cx - bw * 0.1, noseY + bh * 0.12, bw * 0.1, Math.PI * 1.5, Math.PI * 2);
+      ctx.arc(cx + bw * 0.1, noseY + bh * 0.12, bw * 0.1, Math.PI, Math.PI * 1.5);
+    } else {
+      ctx.arc(cx - bw * 0.1, noseY + bh * 0.15, bw * 0.1, 0, Math.PI);
+      ctx.arc(cx + bw * 0.1, noseY + bh * 0.15, bw * 0.1, 0, Math.PI);
+    }
+    ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2; ctx.stroke();
+  }
+
+  // 3. 小猪 (粉嫩)
+  function drawPig(cx, cy, bw, bh, blink, happy) {
+    const pinkBody = '#ffc0cb'; const darkPink = '#ff9eb5'; const nosePink = '#ff6b8b';
+
+    // 身体
+    ctx.save();
+    ctx.beginPath(); ctx.ellipse(cx, cy + bh * 0.15, bw * 1.15, bh * 0.95, 0, 0, Math.PI * 2);
+    ctx.fillStyle = pinkBody; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx, cy + bh * 0.3, bw * 0.7, bh * 0.5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.fill(); // 肚皮
+    ctx.restore();
+
+    // 耳朵
+    const earY = cy - bh * 0.7;
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.6, earY, bw * 0.25, bh * 0.2, -0.4, 0, Math.PI * 2);
+    ctx.fillStyle = darkPink; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.6, earY, bw * 0.12, bh * 0.1, -0.4, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffb6c1'; ctx.fill();
+
+    ctx.beginPath(); ctx.ellipse(cx + bw * 0.6, earY, bw * 0.25, bh * 0.2, 0.4, 0, Math.PI * 2);
+    ctx.fillStyle = darkPink; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx + bw * 0.6, earY, bw * 0.12, bh * 0.1, 0.4, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffb6c1'; ctx.fill();
+
+    // 眼睛
+    const eyeY = cy - bh * 0.05;
+    const eyeGap = bw * 0.38;
+    const eyeR = bw * 0.1;
     if (blink > 0.5) {
-      ctx.beginPath(); ctx.arc(cx - eyeGap, eyeY - eyeR * 0.3, eyeR * 0.8, Math.PI * 0.15, Math.PI * 0.85); ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx - eyeGap, eyeY - eyeR * 0.3, eyeR * 0.8, Math.PI * 0.15, Math.PI * 0.85); ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2.5; ctx.stroke();
       ctx.beginPath(); ctx.arc(cx + eyeGap, eyeY - eyeR * 0.3, eyeR * 0.8, Math.PI * 0.15, Math.PI * 0.85); ctx.stroke();
     } else {
-      ctx.beginPath(); ctx.arc(cx - eyeGap, eyeY, eyeR, 0, Math.PI * 2); ctx.fillStyle = '#2b3a36'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx - eyeGap, eyeY, eyeR, 0, Math.PI * 2); ctx.fillStyle = '#2b2b2b'; ctx.fill();
       ctx.beginPath(); ctx.arc(cx - eyeGap - eyeR*0.3, eyeY - eyeR*0.3, eyeR*0.35, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
-      ctx.beginPath(); ctx.arc(cx + eyeGap, eyeY, eyeR, 0, Math.PI * 2); ctx.fillStyle = '#2b3a36'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeGap, eyeY, eyeR, 0, Math.PI * 2); ctx.fillStyle = '#2b2b2b'; ctx.fill();
       ctx.beginPath(); ctx.arc(cx + eyeGap - eyeR*0.3, eyeY - eyeR*0.3, eyeR*0.35, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
     }
 
-    const noseY = cy + bh * 0.2;
-    ctx.beginPath(); ctx.ellipse(cx, noseY, bw * 0.2, bh * 0.13, 0, 0, Math.PI * 2); ctx.fillStyle = nosePink; ctx.fill();
-    ctx.strokeStyle = '#e04a6a'; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.beginPath(); ctx.ellipse(cx - bw * 0.08, noseY, bw * 0.04, bh * 0.05, 0, 0, Math.PI * 2); ctx.fillStyle = '#c23a5a'; ctx.fill();
-    ctx.beginPath(); ctx.ellipse(cx + bw * 0.08, noseY, bw * 0.04, bh * 0.05, 0, 0, Math.PI * 2); ctx.fillStyle = '#c23a5a'; ctx.fill();
+    // 猪鼻子
+    const noseY = cy + bh * 0.25;
+    ctx.beginPath(); ctx.ellipse(cx, noseY, bw * 0.22, bh * 0.15, 0, 0, Math.PI * 2);
+    ctx.fillStyle = nosePink; ctx.fill();
+    ctx.strokeStyle = '#e04a6a'; ctx.lineWidth = 2; ctx.stroke();
+    // 鼻孔
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.09, noseY, bw * 0.04, bh * 0.06, 0, 0, Math.PI * 2); ctx.fillStyle = '#c23a5a'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx + bw * 0.09, noseY, bw * 0.04, bh * 0.06, 0, 0, Math.PI * 2); ctx.fillStyle = '#c23a5a'; ctx.fill();
 
+    // 嘴巴
     ctx.beginPath();
     if (happy) { ctx.arc(cx, noseY + bh * 0.12, bw * 0.08, Math.PI * 1.2, Math.PI * 1.8); }
     else { ctx.arc(cx, noseY + bh * 0.15, bw * 0.08, 0.2, Math.PI - 0.2); }
     ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2; ctx.stroke();
 
+    // 腮红
     ctx.fillStyle = 'rgba(255,100,130,0.3)';
     ctx.beginPath(); ctx.ellipse(cx - eyeGap - bw*0.15, eyeY + bh * 0.15, bw * 0.15, bh * 0.08, 0, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath(); ctx.ellipse(cx + eyeGap + bw*0.15, eyeY + bh * 0.15, bw * 0.15, bh * 0.08, 0, 0, Math.PI * 2); ctx.fill();
@@ -569,7 +682,6 @@
 
     const cx = W / 2;
     const groundY = H * 0.84;
-    
     const stageMult = getStageMultiplier();
     const bw = Math.min(W * 0.29, H * 0.24) * stageMult.size;
     const bh = bw * 1.06;
@@ -615,8 +727,7 @@
     const m = dt / 60000;
     const stageMult = getStageMultiplier();
     
-    // 年龄增长 (每2分钟长1岁，为了测试效果，实际可以调整)
-    S.age += (dt / 60000) / 2; 
+    S.age += (dt / 60000) / 2; // 每2分钟增长1岁
 
     S.hunger = clamp(S.hunger - 2.0 * stageMult.decay * m);
     S.mood   = clamp(S.mood   - 1.5 * stageMult.decay * m);
@@ -635,9 +746,6 @@
     updateParticles(dt);
   }
 
-  /* =========================================================
-     主循环
-  ========================================================= */
   let lastTime = performance.now();
   function loop(now) {
     const dt = Math.min(now - lastTime, 80);
@@ -666,6 +774,11 @@
   const petOptions = document.querySelectorAll('.pet-card');
   const nameInput = document.getElementById('petNameInput');
   const startBtn = document.getElementById('startBtn');
+  const actionMenu = document.getElementById('actionMenu');
+  const menuTitle = document.getElementById('menuTitle');
+  const menuGrid = document.getElementById('menuGrid');
+  const menuClose = document.getElementById('menuClose');
+  
   const fills = {}, vals = {};
 
   STAT_DEFS.forEach(d => {
@@ -677,9 +790,7 @@
   });
 
   function refreshUI() {
-    // 更新年龄显示
     ageDisplay.textContent = Math.floor(S.age) + ' 岁';
-    
     STAT_DEFS.forEach(d => {
       const v = S[d.key];
       fills[d.key].style.width = v + '%';
@@ -722,76 +833,126 @@
   startBtn.addEventListener('click', () => {
     if (!selectedType || !nameInput.value.trim()) return;
     S.petType = selectedType; S.petName = nameInput.value.trim();
-    S.age = 0; // 新出生
+    S.age = 0; 
     saveState();
     headerName.textContent = S.petName;
     startScreen.classList.add('hidden');
     toast('欢迎 ' + S.petName + ' 来到新家！');
     refreshUI(); resize();
-    initAudio(); // 用户点击，激活音频上下文
+    initAudio();
   });
 
-  /* ---- 互动动作 ---- */
-  function doAction(act) {
+  /* ---- 互动菜单逻辑 ---- */
+  let currentMenuType = ''; // 'feed' or 'clean'
+
+  function openMenu(type) {
+    currentMenuType = type;
+    menuGrid.innerHTML = '';
+    
+    if (type === 'feed') {
+      menuTitle.textContent = '选择食物';
+      const foods = [
+        { id: 'milk', label: '牛奶', emoji: '🥛', hunger: 10, mood: 5, clean: -1, particle: 'milk' },
+        { id: 'bread', label: '面包', emoji: '🍞', hunger: 20, mood: 3, clean: -2, particle: 'bread' },
+        { id: 'noodle', label: '泡面', emoji: '🍜', hunger: 30, mood: -2, clean: -5, particle: 'noodle' },
+        { id: 'potato', label: '洋芋粑', emoji: '🥔', hunger: 25, mood: 8, clean: -3, particle: 'potato' }
+      ];
+      foods.forEach(food => {
+        const btn = document.createElement('div');
+        btn.className = 'menu-item';
+        btn.innerHTML = `<span class="item-emoji">${food.emoji}</span><span class="item-label">${food.label}</span>`;
+        btn.addEventListener('click', () => {
+          actionMenu.classList.remove('show');
+          executeFeed(food);
+        });
+        menuGrid.appendChild(btn);
+      });
+    } else if (type === 'clean') {
+      menuTitle.textContent = '选择洗浴用品';
+      const tools = [
+        { id: 'soap', label: '香皂', emoji: '🧼', clean: 30, mood: -5, particle: 'bubble_soap' },
+        { id: 'gel', label: '沐浴露', emoji: '🧴', clean: 40, mood: 10, particle: 'bubble_gel' }
+      ];
+      tools.forEach(tool => {
+        const btn = document.createElement('div');
+        btn.className = 'menu-item';
+        btn.innerHTML = `<span class="item-emoji">${tool.emoji}</span><span class="item-label">${tool.label}</span>`;
+        btn.addEventListener('click', () => {
+          actionMenu.classList.remove('show');
+          executeClean(tool);
+        });
+        menuGrid.appendChild(btn);
+      });
+    }
+    actionMenu.classList.add('show');
+  }
+
+  menuClose.addEventListener('click', () => actionMenu.classList.remove('show'));
+
+  /* ---- 具体执行动作 ---- */
+  function executeFeed(food) {
     const cx = W / 2, cy = H * 0.6;
-    anim.bounce = 1;
-    playSynthSound(); // 每次互动都有声音
-
+    anim.bounce = 1; playSynthSound(); // 触发声音
+    spawn(cx, cy, 8, food.particle);
+    
     const stage = getAgeStage();
-    const stageName = stage === 'baby' ? '幼年' : (stage === 'elder' ? '老年' : '成年');
-
-    let feedMsg = '🍎 吃得津津有味 +22';
-    let playMsg = '🎾 玩得好开心 +22';
-    let cleanMsg = '🫧 香喷喷 +32';
-    let sleepMsg = '💤 呼…呼… +35 精力';
-
-    // 幼年和老年吃的少，成年吃得多
-    let feedAmount = stage === 'baby' ? 15 : (stage === 'elder' ? 12 : 22);
-    let playMood = stage === 'baby' ? 25 : (stage === 'elder' ? 15 : 22);
-    let sleepEnergy = stage === 'baby' ? 40 : (stage === 'elder' ? 25 : 35);
-
-    if (S.petType === 'cat') {
-      feedMsg = stage === 'baby' ? '🐟 狼吞虎咽地吃小鱼干' : (stage === 'elder' ? '🐟 细嚼慢咽地吃小鱼干' : '🐟 小鱼干真好吃');
-    } else if (S.petType === 'dog') {
-      feedMsg = stage === 'baby' ? '🦴 开心地啃着大骨头' : (stage === 'elder' ? '🦴 慢慢地啃着骨头' : '🦴 大骨头真香');
-    } else if (S.petType === 'pig') {
-      feedMsg = stage === 'baby' ? '🍎 哼哧哼哧吃苹果' : (stage === 'elder' ? '🍎 慢慢品尝苹果' : '🍎 苹果真甜');
-    }
-
-    switch (act) {
-      case 'feed':
-        if (S.hunger > 96) { toast('已经吃饱啦～'); break; }
-        S.hunger = clamp(S.hunger + feedAmount);
-        S.mood = clamp(S.mood + 4); S.clean = clamp(S.clean - 3);
-        spawn(cx, cy, 8, 'food');
-        toast(feedMsg + ' +' + feedAmount);
-        break;
-
-      case 'play':
-        if (S.energy < 15) { S.mood = clamp(S.mood - 3); toast('😵 太累了，先睡一会儿吧…'); break; }
-        S.mood = clamp(S.mood + playMood); S.energy = clamp(S.energy - 12); S.hunger = clamp(S.hunger - 8);
-        spawn(cx, cy, 9, 'heart');
-        toast(playMsg + ' +' + playMood);
-        break;
-
-      case 'clean':
-        if (S.clean > 96) { toast('已经很干净啦～'); break; }
-        S.clean = clamp(S.clean + 32); S.mood = clamp(S.mood + 6);
-        spawn(cx, cy, 10, 'bubble');
-        toast(cleanMsg);
-        break;
-
-      case 'sleep':
-        S.energy = clamp(S.energy + sleepEnergy); S.mood = clamp(S.mood + 3);
-        anim.sleep = 2200; spawn(cx, cy, 5, 'spark');
-        toast(sleepMsg + ' +' + sleepEnergy);
-        break;
-    }
+    let feedMsg = `吃掉了${food.label}`;
+    if (stage === 'baby') feedMsg = `狼吞虎咽地吃掉了${food.label}`;
+    else if (stage === 'elder') feedMsg = `细嚼慢咽地吃掉了${food.label}`;
+    
+    S.hunger = clamp(S.hunger + food.hunger);
+    S.mood = clamp(S.mood + food.mood);
+    S.clean = clamp(S.clean + food.clean);
+    
+    toast(feedMsg + ` 饱食+${food.hunger}`);
     refreshUI(); saveState();
   }
 
+  function executeClean(tool) {
+    const cx = W / 2, cy = H * 0.6;
+    anim.bounce = 1; playSynthSound(); // 触发声音
+    spawn(cx, cy, 12, tool.particle);
+    
+    S.clean = clamp(S.clean + tool.clean);
+    S.mood = clamp(S.mood + tool.mood);
+    
+    let msg = `使用了${tool.label}`;
+    if (tool.mood > 0) msg += `，香香的！`;
+    else msg += `，有点刺鼻…`;
+    
+    toast(msg + ` 清洁+${tool.clean}`);
+    refreshUI(); saveState();
+  }
+
+  /* ---- 绑定按钮 ---- */
   document.querySelectorAll('.act').forEach(btn => {
-    btn.addEventListener('click', e => { e.preventDefault(); doAction(btn.dataset.act); if (navigator.vibrate) navigator.vibrate(12); });
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const act = btn.dataset.act;
+      const cx = W / 2, cy = H * 0.6;
+      
+      if (act === 'feed' || act === 'clean') {
+        openMenu(act);
+        return; // 弹出菜单后不直接执行，等待用户选择
+      }
+
+      anim.bounce = 1; playSynthSound(); // 其他动作直接触发
+      
+      if (act === 'play') {
+        if (S.energy < 15) { S.mood = clamp(S.mood - 3); toast('😵 太累了，先睡一会儿吧…'); return; }
+        S.mood = clamp(S.mood + 22); S.energy = clamp(S.energy - 12); S.hunger = clamp(S.hunger - 8);
+        spawn(cx, cy, 9, 'heart');
+        toast('🎾 玩得好开心 +22');
+      } else if (act === 'sleep') {
+        const sleepEnergy = getAgeStage() === 'baby' ? 40 : (getAgeStage() === 'elder' ? 25 : 35);
+        S.energy = clamp(S.energy + sleepEnergy); S.mood = clamp(S.mood + 3);
+        anim.sleep = 2200; spawn(cx, cy, 5, 'spark');
+        toast('💤 呼…呼… +' + sleepEnergy + ' 精力');
+      }
+      
+      refreshUI(); saveState();
+      if (navigator.vibrate) navigator.vibrate(12);
+    });
   });
 
   /* ---- 摸一摸 ---- */
@@ -803,7 +964,7 @@
     if (dx * dx + dy * dy <= petHit.r * petHit.r) {
       anim.bounce = 1; S.mood = clamp(S.mood + 2);
       spawn(petHit.x, petHit.y - petHit.r * 0.4, 5, 'heart');
-      playSynthSound(); // 摸它也叫一声
+      playSynthSound();
       refreshUI(); saveState();
       if (navigator.vibrate) navigator.vibrate(8);
     }
@@ -816,7 +977,6 @@
     anim.lookTX = clamp(((e.clientX - r.left) / W - 0.5) * 2, -1, 1);
     anim.lookTY = clamp(((e.clientY - r.top) / H - 0.5) * 2, -1, 1);
   });
-
   stage.addEventListener('pointerleave', () => { anim.lookTX = 0; anim.lookTY = 0; });
 
   /* =========================================================
