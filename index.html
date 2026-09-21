@@ -38,8 +38,10 @@
   }
   @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
   .pet-name{font-size:17px;font-weight:600;letter-spacing:.4px}
+  .pet-info{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:12px;color:#93a1c4}
+  .age-badge{background:rgba(255,255,255,.1);padding:2px 8px;border-radius:99px;font-weight:600}
   .mood-tag{
-    font-size:11px;padding:3px 10px;border-radius:999px;margin-left:auto;
+    font-size:11px;padding:3px 10px;border-radius:999px;
     background:rgba(125,211,252,.14);color:#7dd3fc;
     border:1px solid rgba(125,211,252,.28);
     transition:all .35s;
@@ -94,111 +96,48 @@
 
   /* ---------- 选择界面 ---------- */
   .overlay {
-    position: absolute;
-    inset: 0;
-    background: #0d1020;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    transition: opacity 0.5s ease, visibility 0.5s;
+    position: absolute; inset: 0; background: #0d1020; z-index: 100;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px; transition: opacity 0.5s ease, visibility 0.5s;
   }
-  .overlay.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
+  .overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
   .overlay h1 {
-    font-size: 24px;
-    margin-bottom: 8px;
+    font-size: 24px; margin-bottom: 8px;
     background: linear-gradient(90deg, #6ee7b7, #7dd3fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
-  .overlay p {
-    font-size: 13px;
-    color: #93a1c4;
-    margin-bottom: 24px;
-  }
+  .overlay p { font-size: 13px; color: #93a1c4; margin-bottom: 24px; }
   .pet-options {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    width: 100%;
-    max-width: 360px;
-    margin-bottom: 24px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; width: 100%; max-width: 360px; margin-bottom: 24px;
   }
   .pet-card {
-    background: rgba(255,255,255,.05);
-    border: 2px solid rgba(255,255,255,.1);
-    border-radius: 18px;
-    padding: 16px 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: all 0.25s;
+    background: rgba(255,255,255,.05); border: 2px solid rgba(255,255,255,.1);
+    border-radius: 18px; padding: 16px 8px; display: flex; flex-direction: column;
+    align-items: center; gap: 8px; cursor: pointer; transition: all 0.25s;
   }
-  .pet-card:hover {
-    background: rgba(255,255,255,.1);
-  }
+  .pet-card:hover { background: rgba(255,255,255,.1); }
   .pet-card.active {
-    border-color: #6ee7b7;
-    background: rgba(110,231,183,.15);
-    box-shadow: 0 0 20px rgba(110,231,183,.2);
-    transform: translateY(-4px);
+    border-color: #6ee7b7; background: rgba(110,231,183,.15);
+    box-shadow: 0 0 20px rgba(110,231,183,.2); transform: translateY(-4px);
   }
-  .pet-card .emoji-icon {
-    font-size: 36px;
-  }
-  .pet-card .pet-label {
-    font-size: 13px;
-    font-weight: 500;
-  }
+  .pet-card .emoji-icon { font-size: 36px; }
+  .pet-card .pet-label { font-size: 13px; font-weight: 500; }
   .name-input {
-    width: 100%;
-    max-width: 360px;
-    padding: 14px 18px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,.15);
-    background: rgba(0,0,0,.3);
-    color: #fff;
-    font-size: 15px;
-    font-family: inherit;
-    outline: none;
-    text-align: center;
-    margin-bottom: 20px;
-    transition: border-color 0.3s;
+    width: 100%; max-width: 360px; padding: 14px 18px; border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.15); background: rgba(0,0,0,.3);
+    color: #fff; font-size: 15px; font-family: inherit; outline: none;
+    text-align: center; margin-bottom: 20px; transition: border-color 0.3s;
   }
-  .name-input:focus {
-    border-color: #6ee7b7;
-  }
+  .name-input:focus { border-color: #6ee7b7; }
   .start-btn {
-    width: 100%;
-    max-width: 360px;
-    padding: 15px;
-    border-radius: 16px;
-    border: none;
-    background: linear-gradient(135deg, #6ee7b7, #3b82f6);
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    transition: transform 0.15s, opacity 0.3s;
-    opacity: 0.5;
-    pointer-events: none;
+    width: 100%; max-width: 360px; padding: 15px; border-radius: 16px; border: none;
+    background: linear-gradient(135deg, #6ee7b7, #3b82f6); color: #fff;
+    font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer;
+    transition: transform 0.15s, opacity 0.3s; opacity: 0.5; pointer-events: none;
   }
-  .start-btn.ready {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .start-btn.ready:active {
-    transform: scale(0.96);
-  }
+  .start-btn.ready { opacity: 1; pointer-events: auto; }
+  .start-btn.ready:active { transform: scale(0.96); }
 </style>
 </head>
 <body>
@@ -231,7 +170,10 @@
   <div class="header">
     <span class="avatar"></span>
     <span class="pet-name" id="headerName">小糯米</span>
-    <span class="mood-tag" id="moodTag">开心</span>
+    <div class="pet-info">
+      <span class="age-badge" id="ageDisplay">0 岁</span>
+      <span class="mood-tag" id="moodTag">开心</span>
+    </div>
   </div>
 
   <div class="stage">
@@ -260,14 +202,13 @@
   /* =========================================================
      存档 / 状态
   ========================================================= */
-  const SAVE_KEY = 'epet_save_v2'; // 更新版本号，防止旧存档冲突
-  const DECAY = { hunger: 2.0, mood: 1.5, energy: 1.0, clean: 1.2 };
-
+  const SAVE_KEY = 'epet_save_v3'; 
+  
   function freshState() {
     return { 
-      petType: null, // null, 'cat', 'dog', 'pig'
-      petName: '小糯米',
+      petType: null, petName: '小糯米',
       hunger: 85, mood: 85, energy: 85, clean: 85, 
+      age: 0, // 年龄
       last: Date.now() 
     };
   }
@@ -279,16 +220,87 @@
 
     const now = Date.now();
     const mins = Math.max(0, Math.min((now - (s.last || now)) / 60000, 720));
-    for (const k in DECAY) s[k] = clamp((typeof s[k] === 'number' ? s[k] : 80) - DECAY[k] * mins);
+    
+    // 离线时间也会成长
+    s.age = (s.age || 0) + Math.floor(mins / 2); // 每2分钟长1岁
+    
+    // 状态衰减
+    for (const k of ['hunger', 'mood', 'energy', 'clean']) {
+      s[k] = clamp((typeof s[k] === 'number' ? s[k] : 80) - 2.0 * mins);
+    }
     s.last = now;
     return s;
   }
 
   let S = loadState();
+  let lastAgeUpdate = Date.now();
 
   function saveState() {
     S.last = Date.now();
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {}
+  }
+
+  /* =========================================================
+     年龄阶段判定
+  ========================================================= */
+  function getAgeStage() {
+    if (S.age < 5) return 'baby';
+    if (S.age < 15) return 'adult';
+    return 'elder';
+  }
+
+  function getStageMultiplier() {
+    const stage = getAgeStage();
+    if (stage === 'baby') return { size: 0.75, decay: 1.5, jump: 1.3, name: '幼年' };
+    if (stage === 'elder') return { size: 1.15, decay: 0.8, jump: 0.6, name: '老年' };
+    return { size: 1.0, decay: 1.0, jump: 1.0, name: '成年' };
+  }
+
+  /* =========================================================
+     音效合成 (Web Audio API)
+  ========================================================= */
+  let audioCtx = null;
+  function initAudio() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+
+  function playSynthSound() {
+    if (!S.petType) return;
+    initAudio();
+    if (!audioCtx) return;
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    // 根据物种和年龄确定参数
+    let freq = 800; 
+    let type = 'sine';
+    if (S.petType === 'cat') { freq = 1000; type = 'sine'; } // 喵
+    if (S.petType === 'dog') { freq = 600; type = 'square'; } // 汪
+    if (S.petType === 'pig') { freq = 300; type = 'sawtooth'; } // 哼
+
+    const stage = getAgeStage();
+    if (stage === 'baby') freq *= 1.5;
+    if (stage === 'elder') freq *= 0.7;
+
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    // 音调下降，模拟叫声
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.7, audioCtx.currentTime + 0.15);
+    
+    gain.gain.setValueAtTime(0, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.2);
   }
 
   /* =========================================================
@@ -321,13 +333,8 @@
      动画状态
   ========================================================= */
   const anim = {
-    bounce: 0,
-    blinking: false,
-    blinkT: 0,
-    blinkNext: 1800,
-    sleep: 0,
-    lookX: 0, lookY: 0,
-    lookTX: 0, lookTY: 0
+    bounce: 0, blinking: false, blinkT: 0, blinkNext: 1800,
+    sleep: 0, lookX: 0, lookY: 0, lookTX: 0, lookTY: 0
   };
 
   /* =========================================================
@@ -338,15 +345,10 @@
   function spawn(x, y, n, kind) {
     for (let i = 0; i < n; i++) {
       particles.push({
-        x: x + rand(-26, 26),
-        y: y + rand(-16, 16),
-        vx: rand(-0.045, 0.045),
-        vy: rand(-0.17, -0.06),
-        life: 0,
-        max: rand(620, 1150),
-        size: rand(5, 11),
-        rot: rand(-0.7, 0.7),
-        kind: kind || 'spark'
+        x: x + rand(-26, 26), y: y + rand(-16, 16),
+        vx: rand(-0.045, 0.045), vy: rand(-0.17, -0.06),
+        life: 0, max: rand(620, 1150), size: rand(5, 11),
+        rot: rand(-0.7, 0.7), kind: kind || 'spark'
       });
     }
   }
@@ -356,10 +358,8 @@
       const p = particles[i];
       p.life += dt;
       if (p.life >= p.max) { particles.splice(i, 1); continue; }
-      p.x += p.vx * dt;
-      p.y += p.vy * dt;
-      p.vy += 0.00026 * dt;
-      p.rot += 0.0012 * dt;
+      p.x += p.vx * dt; p.y += p.vy * dt;
+      p.vy += 0.00026 * dt; p.rot += 0.0012 * dt;
     }
   }
 
@@ -377,29 +377,19 @@
       const alpha = k < 0.15 ? k / 0.15 : 1 - (k - 0.15) / 0.85;
       ctx.save();
       ctx.globalAlpha = Math.max(0, alpha);
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot);
+      ctx.translate(p.x, p.y); ctx.rotate(p.rot);
 
       if (p.kind === 'heart') {
-        ctx.fillStyle = '#ff7eb3';
-        heartPath(0, 0, p.size * 0.62);
-        ctx.fill();
+        ctx.fillStyle = '#ff7eb3'; heartPath(0, 0, p.size * 0.62); ctx.fill();
       } else if (p.kind === 'bubble') {
-        ctx.beginPath();
-        ctx.arc(0, 0, p.size * 0.55, 0, Math.PI * 2);
-        ctx.strokeStyle = '#8fd8ff';
-        ctx.lineWidth = 1.6;
-        ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 0, p.size * 0.55, 0, Math.PI * 2);
+        ctx.strokeStyle = '#8fd8ff'; ctx.lineWidth = 1.6; ctx.stroke();
       } else if (p.kind === 'food') {
-        ctx.fillStyle = '#ffb454';
-        ctx.beginPath();
-        ctx.arc(0, 0, p.size * 0.42, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillStyle = '#ffb454'; ctx.beginPath();
+        ctx.arc(0, 0, p.size * 0.42, 0, Math.PI * 2); ctx.fill();
       } else {
-        ctx.fillStyle = '#a9f5d6';
-        ctx.beginPath();
-        ctx.arc(0, 0, p.size * 0.42, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillStyle = '#a9f5d6'; ctx.beginPath();
+        ctx.arc(0, 0, p.size * 0.42, 0, Math.PI * 2); ctx.fill();
       }
       ctx.restore();
     }
@@ -419,21 +409,16 @@
   function drawStars(now) {
     for (const s of stars) {
       const a = 0.18 + 0.5 * (0.5 + 0.5 * Math.sin(now * 0.001 * s.sp + s.ph));
-      ctx.beginPath();
-      ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(190,215,255,' + a.toFixed(3) + ')';
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(190,215,255,' + a.toFixed(3) + ')'; ctx.fill();
     }
   }
 
   /* =========================================================
-     绘制工具：毛发纹理、眼睛等
+     绘制工具
   ========================================================= */
-  // 绘制毛茸茸的边缘效果
   function drawFurEdge(cx, cy, w, h, count, color) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineCap = 'round';
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * Math.PI * 2;
       const r = 1 + Math.random() * 0.15;
@@ -441,407 +426,137 @@
       const y1 = cy + Math.sin(angle) * h * 0.9 * r;
       const x2 = cx + Math.cos(angle) * w * 1.05 * r;
       const y2 = cy + Math.sin(angle) * h * 1.05 * r;
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
     }
   }
 
   function drawEye(x, y, r, blink, happy) {
     if (happy && blink < 0.05) {
-      ctx.beginPath();
-      ctx.arc(x, y + r * 0.62, r * 0.98, Math.PI * 1.14, Math.PI * 1.86);
-      ctx.strokeStyle = '#2b3a36';
-      ctx.lineWidth = Math.max(2, r * 0.36);
-      ctx.lineCap = 'round';
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y + r * 0.62, r * 0.98, Math.PI * 1.14, Math.PI * 1.86);
+      ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = Math.max(2, r * 0.36); ctx.lineCap = 'round'; ctx.stroke();
       return;
     }
-
     const ry = r * (1 - blink * 0.88);
     if (ry < 0.6) {
-      ctx.beginPath();
-      ctx.arc(x, y - r * 0.3, r * 0.85, Math.PI * 0.15, Math.PI * 0.85);
-      ctx.strokeStyle = '#2b3a36';
-      ctx.lineWidth = Math.max(2, r * 0.32);
-      ctx.lineCap = 'round';
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y - r * 0.3, r * 0.85, Math.PI * 0.15, Math.PI * 0.85);
+      ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = Math.max(2, r * 0.32); ctx.lineCap = 'round'; ctx.stroke();
       return;
     }
-
-    // 大眼珠
-    ctx.beginPath();
-    ctx.ellipse(x, y, r, ry, 0, 0, Math.PI * 2);
-    ctx.fillStyle = '#2b3a36';
-    ctx.fill();
-
-    // 高光
+    ctx.beginPath(); ctx.ellipse(x, y, r, ry, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#2b3a36'; ctx.fill();
     if (blink < 0.4) {
-      ctx.beginPath();
-      ctx.arc(x - r * 0.32, y - r * 0.34, r * 0.3, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,.92)';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(x + r * 0.2, y + r * 0.2, r * 0.12, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,.7)';
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(x - r * 0.32, y - r * 0.34, r * 0.3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,.92)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(x + r * 0.2, y + r * 0.2, r * 0.12, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.fill();
     }
   }
 
   /* =========================================================
-     绘制不同宠物
+     绘制不同宠物 (带年龄缩放)
   ========================================================= */
-  // 1. 小猫 (参考图1，带有虎斑纹和白色毛发)
   function drawCat(cx, cy, bw, bh, blink, happy) {
-    const baseColor = '#f5f0eb'; // 米白底色
-    const stripeColor = '#c47a3b'; // 橘棕色虎斑
-    const darkStripe = '#4a3b32'; // 深色纹理
+    const baseColor = '#f5f0eb'; const stripeColor = '#c47a3b';
     const pinkNose = '#ff9eb5';
-
-    // 尾巴
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(cx + bw * 0.9, cy + bh * 0.8);
-    ctx.quadraticCurveTo(cx + bw * 1.6, cy + bh * 0.2, cx + bw * 1.3, cy - bh * 0.6);
-    ctx.strokeStyle = stripeColor;
-    ctx.lineWidth = bw * 0.15;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-    // 尾巴上的毛
-    for(let i=0;i<10;i++){
-      const t = i/10;
-      const tx = cx + bw * 0.9 + (bw*0.4)*t;
-      const ty = cy + bh * 0.8 - (bh*1.4)*t;
-      ctx.beginPath();
-      ctx.moveTo(tx, ty);
-      ctx.lineTo(tx + rand(-5,5), ty + rand(-5,5));
-      ctx.strokeStyle = darkStripe;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-    }
-    ctx.restore();
-
-    // 身体（毛茸茸的轮廓）
-    ctx.save();
-    ctx.beginPath();
+    ctx.save(); ctx.beginPath();
     ctx.ellipse(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 0, 0, Math.PI * 2);
-    ctx.fillStyle = baseColor;
-    ctx.fill();
-    // 毛发边缘
+    ctx.fillStyle = baseColor; ctx.fill();
     drawFurEdge(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 60, 'rgba(200,190,180,0.6)');
-    
-    // 虎斑色块
-    ctx.beginPath();
-    ctx.ellipse(cx - bw * 0.3, cy + bh * 0.1, bw * 0.5, bh * 0.6, -0.3, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(196,122,59,0.4)';
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(cx + bw * 0.4, cy + bh * 0.3, bw * 0.4, bh * 0.5, 0.2, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(74,59,50,0.3)';
-    ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.3, cy + bh * 0.1, bw * 0.5, bh * 0.6, -0.3, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(196,122,59,0.4)'; ctx.fill();
     ctx.restore();
 
-    // 耳朵
-    const earY = cy - bh * 0.8;
-    const earW = bw * 0.5;
-    const earH = bh * 0.6;
-    // 左耳
-    ctx.beginPath();
-    ctx.moveTo(cx - bw * 0.5, earY);
-    ctx.lineTo(cx - bw * 0.8, earY - earH);
-    ctx.lineTo(cx - bw * 0.1, earY - earH * 0.8);
-    ctx.closePath();
-    ctx.fillStyle = baseColor;
-    ctx.fill();
-    ctx.strokeStyle = stripeColor;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    // 左耳内耳
-    ctx.beginPath();
-    ctx.moveTo(cx - bw * 0.48, earY);
-    ctx.lineTo(cx - bw * 0.7, earY - earH * 0.8);
-    ctx.lineTo(cx - bw * 0.2, earY - earH * 0.7);
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(255,150,175,0.4)';
-    ctx.fill();
+    const earY = cy - bh * 0.8; const earW = bw * 0.5; const earH = bh * 0.6;
+    ctx.beginPath(); ctx.moveTo(cx - bw * 0.5, earY); ctx.lineTo(cx - bw * 0.8, earY - earH); ctx.lineTo(cx - bw * 0.1, earY - earH * 0.8); ctx.closePath();
+    ctx.fillStyle = baseColor; ctx.fill(); ctx.strokeStyle = stripeColor; ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx - bw * 0.48, earY); ctx.lineTo(cx - bw * 0.7, earY - earH * 0.8); ctx.lineTo(cx - bw * 0.2, earY - earH * 0.7); ctx.closePath();
+    ctx.fillStyle = 'rgba(255,150,175,0.4)'; ctx.fill();
 
-    // 右耳
-    ctx.beginPath();
-    ctx.moveTo(cx + bw * 0.5, earY);
-    ctx.lineTo(cx + bw * 0.8, earY - earH);
-    ctx.lineTo(cx + bw * 0.1, earY - earH * 0.8);
-    ctx.closePath();
-    ctx.fillStyle = baseColor;
-    ctx.fill();
-    ctx.strokeStyle = stripeColor;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    // 右耳内耳
-    ctx.beginPath();
-    ctx.moveTo(cx + bw * 0.48, earY);
-    ctx.lineTo(cx + bw * 0.7, earY - earH * 0.8);
-    ctx.lineTo(cx + bw * 0.2, earY - earH * 0.7);
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(255,150,175,0.4)';
-    ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx + bw * 0.5, earY); ctx.lineTo(cx + bw * 0.8, earY - earH); ctx.lineTo(cx + bw * 0.1, earY - earH * 0.8); ctx.closePath();
+    ctx.fillStyle = baseColor; ctx.fill(); ctx.strokeStyle = stripeColor; ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx + bw * 0.48, earY); ctx.lineTo(cx + bw * 0.7, earY - earH * 0.8); ctx.lineTo(cx + bw * 0.2, earY - earH * 0.7); ctx.closePath();
+    ctx.fillStyle = 'rgba(255,150,175,0.4)'; ctx.fill();
 
-    // 眼睛
-    const eyeY = cy - bh * 0.1;
-    const eyeGap = bw * 0.35;
-    const eyeR = bw * 0.13;
-    drawEye(cx - eyeGap, eyeY, eyeR, blink, happy);
-    drawEye(cx + eyeGap, eyeY, eyeR, blink, happy);
+    const eyeY = cy - bh * 0.1; const eyeGap = bw * 0.35; const eyeR = bw * 0.13;
+    drawEye(cx - eyeGap, eyeY, eyeR, blink, happy); drawEye(cx + eyeGap, eyeY, eyeR, blink, happy);
 
-    // 鼻子和嘴巴
     const noseY = cy + bh * 0.15;
-    ctx.beginPath();
-    ctx.moveTo(cx - bw * 0.1, noseY);
-    ctx.lineTo(cx + bw * 0.1, noseY);
-    ctx.lineTo(cx, noseY + bh * 0.05);
-    ctx.closePath();
-    ctx.fillStyle = pinkNose;
-    ctx.fill();
-
-    // 嘴巴
-    ctx.beginPath();
-    ctx.moveTo(cx, noseY + bh * 0.05);
-    if (happy) {
-      ctx.arc(cx - bw * 0.1, noseY + bh * 0.1, bw * 0.1, Math.PI * 1.5, Math.PI * 2);
-      ctx.arc(cx + bw * 0.1, noseY + bh * 0.1, bw * 0.1, Math.PI, Math.PI * 1.5);
-    } else {
-      ctx.arc(cx - bw * 0.1, noseY + bh * 0.15, bw * 0.1, 0, Math.PI);
-      ctx.arc(cx + bw * 0.1, noseY + bh * 0.15, bw * 0.1, 0, Math.PI);
-    }
-    ctx.strokeStyle = '#2b3a36';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // 胡须
-    ctx.strokeStyle = 'rgba(100,100,100,0.5)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < 3; i++) {
-      const wy = noseY + i * 5 - 5;
-      ctx.beginPath();
-      ctx.moveTo(cx - bw * 0.15, wy);
-      ctx.lineTo(cx - bw * 0.7, wy - 10 + i * 5);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(cx + bw * 0.15, wy);
-      ctx.lineTo(cx + bw * 0.7, wy - 10 + i * 5);
-      ctx.stroke();
-    }
+    ctx.beginPath(); ctx.moveTo(cx - bw * 0.1, noseY); ctx.lineTo(cx + bw * 0.1, noseY); ctx.lineTo(cx, noseY + bh * 0.05); ctx.closePath();
+    ctx.fillStyle = pinkNose; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx, noseY + bh * 0.05);
+    if (happy) { ctx.arc(cx - bw * 0.1, noseY + bh * 0.1, bw * 0.1, Math.PI * 1.5, Math.PI * 2); ctx.arc(cx + bw * 0.1, noseY + bh * 0.1, bw * 0.1, Math.PI, Math.PI * 1.5); }
+    else { ctx.arc(cx - bw * 0.1, noseY + bh * 0.15, bw * 0.1, 0, Math.PI); ctx.arc(cx + bw * 0.1, noseY + bh * 0.15, bw * 0.1, 0, Math.PI); }
+    ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2; ctx.stroke();
   }
 
-  // 2. 小狗 (参考图3，长垂耳，白底棕块)
   function drawDog(cx, cy, bw, bh, blink, happy) {
-    const baseColor = '#fdfbf7';
-    const brownColor = '#a06b44';
-    const darkBrown = '#6b4423';
-
-    // 身体
-    ctx.save();
-    ctx.beginPath();
-    ctx.ellipse(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 0, 0, Math.PI * 2);
-    ctx.fillStyle = baseColor;
-    ctx.fill();
+    const baseColor = '#fdfbf7'; const brownColor = '#a06b44'; const darkBrown = '#6b4423';
+    ctx.save(); ctx.beginPath(); ctx.ellipse(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 0, 0, Math.PI * 2);
+    ctx.fillStyle = baseColor; ctx.fill();
     drawFurEdge(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 60, 'rgba(180,160,140,0.5)');
-    
-    // 棕色斑块
-    ctx.beginPath();
-    ctx.ellipse(cx - bw * 0.4, cy + bh * 0.3, bw * 0.4, bh * 0.5, 0.2, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(160,107,68,0.5)';
-    ctx.fill();
-    ctx.restore();
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.4, cy + bh * 0.3, bw * 0.4, bh * 0.5, 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(160,107,68,0.5)'; ctx.fill(); ctx.restore();
 
-    // 垂耳 (特色)
-    const earY = cy - bh * 0.6;
-    const earW = bw * 0.5;
-    const earH = bh * 0.8;
+    const earY = cy - bh * 0.6; const earH = bh * 0.8;
+    ctx.save(); ctx.beginPath(); ctx.moveTo(cx - bw * 0.5, earY); ctx.quadraticCurveTo(cx - bw * 1.2, earY + bh * 0.2, cx - bw * 0.9, earY + earH); ctx.quadraticCurveTo(cx - bw * 0.6, earY + earH * 0.6, cx - bw * 0.3, earY + bh * 0.1); ctx.closePath();
+    ctx.fillStyle = brownColor; ctx.fill(); drawFurEdge(cx - bw * 0.7, earY + earH * 0.5, bw * 0.3, bh * 0.4, 30, darkBrown); ctx.restore();
 
-    // 左垂耳
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(cx - bw * 0.5, earY);
-    ctx.quadraticCurveTo(cx - bw * 1.2, earY + bh * 0.2, cx - bw * 0.9, earY + earH);
-    ctx.quadraticCurveTo(cx - bw * 0.6, earY + earH * 0.6, cx - bw * 0.3, earY + bh * 0.1);
-    ctx.closePath();
-    ctx.fillStyle = brownColor;
-    ctx.fill();
-    // 耳朵毛
-    drawFurEdge(cx - bw * 0.7, earY + earH * 0.5, bw * 0.3, bh * 0.4, 30, darkBrown);
-    ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.moveTo(cx + bw * 0.5, earY); ctx.quadraticCurveTo(cx + bw * 1.2, earY + bh * 0.2, cx + bw * 0.9, earY + earH); ctx.quadraticCurveTo(cx + bw * 0.6, earY + earH * 0.6, cx + bw * 0.3, earY + bh * 0.1); ctx.closePath();
+    ctx.fillStyle = brownColor; ctx.fill(); drawFurEdge(cx + bw * 0.7, earY + earH * 0.5, bw * 0.3, bh * 0.4, 30, darkBrown); ctx.restore();
 
-    // 右垂耳
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(cx + bw * 0.5, earY);
-    ctx.quadraticCurveTo(cx + bw * 1.2, earY + bh * 0.2, cx + bw * 0.9, earY + earH);
-    ctx.quadraticCurveTo(cx + bw * 0.6, earY + earH * 0.6, cx + bw * 0.3, earY + bh * 0.1);
-    ctx.closePath();
-    ctx.fillStyle = brownColor;
-    ctx.fill();
-    drawFurEdge(cx + bw * 0.7, earY + earH * 0.5, bw * 0.3, bh * 0.4, 30, darkBrown);
-    ctx.restore();
+    ctx.beginPath(); ctx.ellipse(cx, cy - bh * 0.4, bw * 0.2, bh * 0.25, 0, 0, Math.PI * 2); ctx.fillStyle = baseColor; ctx.fill();
 
-    // 额头白毛
-    ctx.beginPath();
-    ctx.ellipse(cx, cy - bh * 0.4, bw * 0.2, bh * 0.25, 0, 0, Math.PI * 2);
-    ctx.fillStyle = baseColor;
-    ctx.fill();
+    const eyeY = cy - bh * 0.1; const eyeGap = bw * 0.35; const eyeR = bw * 0.12;
+    drawEye(cx - eyeGap, eyeY, eyeR, blink, happy); drawEye(cx + eyeGap, eyeY, eyeR, blink, happy);
 
-    // 眼睛
-    const eyeY = cy - bh * 0.1;
-    const eyeGap = bw * 0.35;
-    const eyeR = bw * 0.12;
-    drawEye(cx - eyeGap, eyeY, eyeR, blink, happy);
-    drawEye(cx + eyeGap, eyeY, eyeR, blink, happy);
-
-    // 大黑鼻子
     const noseY = cy + bh * 0.2;
-    ctx.beginPath();
-    ctx.ellipse(cx, noseY, bw * 0.12, bh * 0.08, 0, 0, Math.PI * 2);
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fill();
-    // 鼻子高光
-    ctx.beginPath();
-    ctx.ellipse(cx - bw * 0.03, noseY - bh * 0.02, bw * 0.03, bh * 0.02, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
-    ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx, noseY, bw * 0.12, bh * 0.08, 0, 0, Math.PI * 2); ctx.fillStyle = '#1a1a1a'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.03, noseY - bh * 0.02, bw * 0.03, bh * 0.02, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.fill();
 
-    // 嘴巴
-    ctx.beginPath();
-    ctx.moveTo(cx, noseY + bh * 0.08);
-    if (happy) {
-      ctx.arc(cx - bw * 0.08, noseY + bh * 0.12, bw * 0.08, Math.PI * 1.5, Math.PI * 2);
-      ctx.arc(cx + bw * 0.08, noseY + bh * 0.12, bw * 0.08, Math.PI, Math.PI * 1.5);
-    } else {
-      ctx.arc(cx - bw * 0.08, noseY + bh * 0.15, bw * 0.08, 0, Math.PI);
-      ctx.arc(cx + bw * 0.08, noseY + bh * 0.15, bw * 0.08, 0, Math.PI);
-    }
-    ctx.strokeStyle = '#2b3a36';
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, noseY + bh * 0.08);
+    if (happy) { ctx.arc(cx - bw * 0.08, noseY + bh * 0.12, bw * 0.08, Math.PI * 1.5, Math.PI * 2); ctx.arc(cx + bw * 0.08, noseY + bh * 0.12, bw * 0.08, Math.PI, Math.PI * 1.5); }
+    else { ctx.arc(cx - bw * 0.08, noseY + bh * 0.15, bw * 0.08, 0, Math.PI); ctx.arc(cx + bw * 0.08, noseY + bh * 0.15, bw * 0.08, 0, Math.PI); }
+    ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2; ctx.stroke();
   }
 
-  // 3. 小猪 (参考图2，粉色圆润)
   function drawPig(cx, cy, bw, bh, blink, happy) {
-    const pinkBody = '#ffb6c1';
-    const darkPink = '#ff8fab';
-    const nosePink = '#ff6b8b';
-
-    // 身体
-    ctx.save();
-    ctx.beginPath();
-    ctx.ellipse(cx, cy + bh * 0.15, bw * 1.1, bh * 0.95, 0, 0, Math.PI * 2);
-    ctx.fillStyle = pinkBody;
-    ctx.fill();
+    const pinkBody = '#ffb6c1'; const darkPink = '#ff8fab'; const nosePink = '#ff6b8b';
+    ctx.save(); ctx.beginPath(); ctx.ellipse(cx, cy + bh * 0.15, bw * 1.1, bh * 0.95, 0, 0, Math.PI * 2);
+    ctx.fillStyle = pinkBody; ctx.fill();
     drawFurEdge(cx, cy + bh * 0.15, bw * 1.1, bh * 0.95, 50, 'rgba(255,140,170,0.6)');
-    
-    // 肚子颜色浅一点
-    ctx.beginPath();
-    ctx.ellipse(cx, cy + bh * 0.3, bw * 0.6, bh * 0.5, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.fill();
-    ctx.restore();
+    ctx.beginPath(); ctx.ellipse(cx, cy + bh * 0.3, bw * 0.6, bh * 0.5, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fill(); ctx.restore();
 
-    // 圆耳朵
     const earY = cy - bh * 0.75;
-    // 左耳
-    ctx.beginPath();
-    ctx.ellipse(cx - bw * 0.6, earY, bw * 0.25, bh * 0.2, -0.3, 0, Math.PI * 2);
-    ctx.fillStyle = darkPink;
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(cx - bw * 0.6, earY, bw * 0.15, bh * 0.12, -0.3, 0, Math.PI * 2);
-    ctx.fillStyle = '#ff9eb5';
-    ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.6, earY, bw * 0.25, bh * 0.2, -0.3, 0, Math.PI * 2); ctx.fillStyle = darkPink; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.6, earY, bw * 0.15, bh * 0.12, -0.3, 0, Math.PI * 2); ctx.fillStyle = '#ff9eb5'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx + bw * 0.6, earY, bw * 0.25, bh * 0.2, 0.3, 0, Math.PI * 2); ctx.fillStyle = darkPink; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx + bw * 0.6, earY, bw * 0.15, bh * 0.12, 0.3, 0, Math.PI * 2); ctx.fillStyle = '#ff9eb5'; ctx.fill();
 
-    // 右耳
-    ctx.beginPath();
-    ctx.ellipse(cx + bw * 0.6, earY, bw * 0.25, bh * 0.2, 0.3, 0, Math.PI * 2);
-    ctx.fillStyle = darkPink;
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(cx + bw * 0.6, earY, bw * 0.15, bh * 0.12, 0.3, 0, Math.PI * 2);
-    ctx.fillStyle = '#ff9eb5';
-    ctx.fill();
-
-    // 眼睛 (小猪用豆豆眼更可爱)
-    const eyeY = cy - bh * 0.1;
-    const eyeGap = bw * 0.4;
-    const eyeR = bw * 0.1;
-    
+    const eyeY = cy - bh * 0.1; const eyeGap = bw * 0.4; const eyeR = bw * 0.1;
     if (blink > 0.5) {
-      // 闭眼
-      ctx.beginPath();
-      ctx.arc(cx - eyeGap, eyeY - eyeR * 0.3, eyeR * 0.8, Math.PI * 0.15, Math.PI * 0.85);
-      ctx.strokeStyle = '#2b3a36';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(cx + eyeGap, eyeY - eyeR * 0.3, eyeR * 0.8, Math.PI * 0.15, Math.PI * 0.85);
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx - eyeGap, eyeY - eyeR * 0.3, eyeR * 0.8, Math.PI * 0.15, Math.PI * 0.85); ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx + eyeGap, eyeY - eyeR * 0.3, eyeR * 0.8, Math.PI * 0.15, Math.PI * 0.85); ctx.stroke();
     } else {
-      // 圆眼睛
-      ctx.beginPath();
-      ctx.arc(cx - eyeGap, eyeY, eyeR, 0, Math.PI * 2);
-      ctx.fillStyle = '#2b3a36';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(cx - eyeGap - eyeR*0.3, eyeY - eyeR*0.3, eyeR*0.35, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(cx + eyeGap, eyeY, eyeR, 0, Math.PI * 2);
-      ctx.fillStyle = '#2b3a36';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(cx + eyeGap - eyeR*0.3, eyeY - eyeR*0.3, eyeR*0.35, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(cx - eyeGap, eyeY, eyeR, 0, Math.PI * 2); ctx.fillStyle = '#2b3a36'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx - eyeGap - eyeR*0.3, eyeY - eyeR*0.3, eyeR*0.35, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeGap, eyeY, eyeR, 0, Math.PI * 2); ctx.fillStyle = '#2b3a36'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeGap - eyeR*0.3, eyeY - eyeR*0.3, eyeR*0.35, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
     }
 
-    // 猪鼻子 (标志性)
     const noseY = cy + bh * 0.2;
-    ctx.beginPath();
-    ctx.ellipse(cx, noseY, bw * 0.2, bh * 0.13, 0, 0, Math.PI * 2);
-    ctx.fillStyle = nosePink;
-    ctx.fill();
-    ctx.strokeStyle = '#e04a6a';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(cx, noseY, bw * 0.2, bh * 0.13, 0, 0, Math.PI * 2); ctx.fillStyle = nosePink; ctx.fill();
+    ctx.strokeStyle = '#e04a6a'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(cx - bw * 0.08, noseY, bw * 0.04, bh * 0.05, 0, 0, Math.PI * 2); ctx.fillStyle = '#c23a5a'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx + bw * 0.08, noseY, bw * 0.04, bh * 0.05, 0, 0, Math.PI * 2); ctx.fillStyle = '#c23a5a'; ctx.fill();
 
-    // 鼻孔
     ctx.beginPath();
-    ctx.ellipse(cx - bw * 0.08, noseY, bw * 0.04, bh * 0.05, 0, 0, Math.PI * 2);
-    ctx.fillStyle = '#c23a5a';
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(cx + bw * 0.08, noseY, bw * 0.04, bh * 0.05, 0, 0, Math.PI * 2);
-    ctx.fillStyle = '#c23a5a';
-    ctx.fill();
+    if (happy) { ctx.arc(cx, noseY + bh * 0.12, bw * 0.08, Math.PI * 1.2, Math.PI * 1.8); }
+    else { ctx.arc(cx, noseY + bh * 0.15, bw * 0.08, 0.2, Math.PI - 0.2); }
+    ctx.strokeStyle = '#2b3a36'; ctx.lineWidth = 2; ctx.stroke();
 
-    // 嘴巴 (在鼻子下面)
-    ctx.beginPath();
-    if (happy) {
-      ctx.arc(cx, noseY + bh * 0.12, bw * 0.08, Math.PI * 1.2, Math.PI * 1.8);
-    } else {
-      ctx.arc(cx, noseY + bh * 0.15, bw * 0.08, 0.2, Math.PI - 0.2);
-    }
-    ctx.strokeStyle = '#2b3a36';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // 腮红
     ctx.fillStyle = 'rgba(255,100,130,0.3)';
-    ctx.beginPath();
-    ctx.ellipse(cx - eyeGap - bw*0.15, eyeY + bh * 0.15, bw * 0.15, bh * 0.08, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(cx + eyeGap + bw*0.15, eyeY + bh * 0.15, bw * 0.15, bh * 0.08, 0, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx - eyeGap - bw*0.15, eyeY + bh * 0.15, bw * 0.15, bh * 0.08, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx + eyeGap + bw*0.15, eyeY + bh * 0.15, bw * 0.15, bh * 0.08, 0, 0, Math.PI * 2); ctx.fill();
   }
 
   /* =========================================================
@@ -850,64 +565,46 @@
   function render(now) {
     if (!W || !H || !S.petType) return;
     ctx.clearRect(0, 0, W, H);
-
     drawStars(now);
 
-    const cx      = W / 2;
+    const cx = W / 2;
     const groundY = H * 0.84;
-    const bw      = Math.min(W * 0.29, H * 0.24);
-    const bh      = bw * 1.06;
+    
+    const stageMult = getStageMultiplier();
+    const bw = Math.min(W * 0.29, H * 0.24) * stageMult.size;
+    const bh = bw * 1.06;
 
-    const p     = 1 - anim.bounce;
-    const jump  = -Math.sin(p * Math.PI) * bh * 0.52;
-    const bob   = Math.sin(now * 0.0016) * bh * 0.028;
-    const cy    = groundY - bh + bob + jump;
+    const p = 1 - anim.bounce;
+    const jump = -Math.sin(p * Math.PI) * bh * 0.52 * stageMult.jump;
+    const bob = Math.sin(now * 0.0016) * bh * 0.028;
+    const cy = groundY - bh + bob + jump;
 
     petHit = { x: cx, y: cy, r: bw * 1.25 };
 
-    const sad      = S.mood < 35 || S.hunger < 22 || S.energy < 18;
-    const happy    = S.mood > 62 && !sad;
+    const sad = S.mood < 35 || S.hunger < 22 || S.energy < 18;
+    const happy = S.mood > 62 && !sad;
 
-    // 影子
     const sk = 1 - Math.sin(p * Math.PI) * 0.5;
-    ctx.beginPath();
-    ctx.ellipse(cx, groundY + bh * 0.05, bw * 0.88 * sk, bw * 0.17 * sk, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0,0,0,.32)';
-    ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx, groundY + bh * 0.05, bw * 0.88 * sk, bw * 0.17 * sk, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,.32)'; ctx.fill();
 
-    // 眨眼计算
     let blink = 0;
-    if (anim.blinking) {
-      const q = anim.blinkT / 190;
-      blink = q < 0.5 ? q * 2 : (1 - q) * 2;
-    }
+    if (anim.blinking) { const q = anim.blinkT / 190; blink = q < 0.5 ? q * 2 : (1 - q) * 2; }
     if (anim.sleep > 0) blink = 1;
 
-    // 根据宠物类型绘制
-    if (S.petType === 'cat') {
-      drawCat(cx, cy, bw, bh, blink, happy);
-    } else if (S.petType === 'dog') {
-      drawDog(cx, cy, bw, bh, blink, happy);
-    } else if (S.petType === 'pig') {
-      drawPig(cx, cy, bw, bh, blink, happy);
-    }
+    if (S.petType === 'cat') drawCat(cx, cy, bw, bh, blink, happy);
+    else if (S.petType === 'dog') drawDog(cx, cy, bw, bh, blink, happy);
+    else if (S.petType === 'pig') drawPig(cx, cy, bw, bh, blink, happy);
 
-    // 睡觉 Zzz
     if (anim.sleep > 0) {
       const k = 1 - anim.sleep / 2200;
-      ctx.save();
-      ctx.globalAlpha = Math.min(1, anim.sleep / 500) * 0.9;
-      ctx.fillStyle = '#bcd7ff';
-      ctx.textAlign = 'center';
-      const zx = cx + bw * 0.9;
-      const zy = cy - bh * 0.85 - k * bh * 0.45;
-      ctx.font = '600 ' + Math.max(15, bw * 0.32) + 'px -apple-system,sans-serif';
-      ctx.fillText('z', zx, zy);
-      ctx.font = '600 ' + Math.max(11, bw * 0.22) + 'px -apple-system,sans-serif';
-      ctx.fillText('z', zx + bw * 0.34, zy - bh * 0.32);
+      ctx.save(); ctx.globalAlpha = Math.min(1, anim.sleep / 500) * 0.9;
+      ctx.fillStyle = '#bcd7ff'; ctx.textAlign = 'center';
+      const zx = cx + bw * 0.9; const zy = cy - bh * 0.85 - k * bh * 0.45;
+      ctx.font = '600 ' + Math.max(15, bw * 0.32) + 'px -apple-system,sans-serif'; ctx.fillText('z', zx, zy);
+      ctx.font = '600 ' + Math.max(11, bw * 0.22) + 'px -apple-system,sans-serif'; ctx.fillText('z', zx + bw * 0.34, zy - bh * 0.32);
       ctx.restore();
     }
-
     drawParticles();
   }
 
@@ -916,31 +613,25 @@
   ========================================================= */
   function update(dt) {
     const m = dt / 60000;
+    const stageMult = getStageMultiplier();
+    
+    // 年龄增长 (每2分钟长1岁，为了测试效果，实际可以调整)
+    S.age += (dt / 60000) / 2; 
 
-    S.hunger = clamp(S.hunger - DECAY.hunger * m);
-    S.mood   = clamp(S.mood   - DECAY.mood   * m);
-    S.energy = clamp(S.energy - DECAY.energy * m);
-    S.clean  = clamp(S.clean  - DECAY.clean  * m);
+    S.hunger = clamp(S.hunger - 2.0 * stageMult.decay * m);
+    S.mood   = clamp(S.mood   - 1.5 * stageMult.decay * m);
+    S.energy = clamp(S.energy - 1.0 * stageMult.decay * m);
+    S.clean  = clamp(S.clean  - 1.2 * stageMult.decay * m);
 
     if (anim.bounce > 0) anim.bounce = Math.max(0, anim.bounce - dt / 520);
-
     anim.blinkNext -= dt;
-    if (!anim.blinking && anim.blinkNext <= 0) {
-      anim.blinking = true;
-      anim.blinkT = 0;
-      anim.blinkNext = rand(2200, 5200);
-    }
-    if (anim.blinking) {
-      anim.blinkT += dt;
-      if (anim.blinkT > 190) { anim.blinking = false; anim.blinkT = 0; }
-    }
-
+    if (!anim.blinking && anim.blinkNext <= 0) { anim.blinking = true; anim.blinkT = 0; anim.blinkNext = rand(2200, 5200); }
+    if (anim.blinking) { anim.blinkT += dt; if (anim.blinkT > 190) { anim.blinking = false; anim.blinkT = 0; } }
     if (anim.sleep > 0) anim.sleep = Math.max(0, anim.sleep - dt);
 
     const k = Math.min(1, dt / 130);
     anim.lookX += (anim.lookTX - anim.lookX) * k;
     anim.lookY += (anim.lookTY - anim.lookY) * k;
-
     updateParticles(dt);
   }
 
@@ -948,7 +639,6 @@
      主循环
   ========================================================= */
   let lastTime = performance.now();
-
   function loop(now) {
     const dt = Math.min(now - lastTime, 80);
     lastTime = now;
@@ -967,30 +657,29 @@
     { key: 'clean',  icon: '🫧', color: '#6ee7b7' }
   ];
 
-  const statsEl  = document.getElementById('stats');
-  const moodTag  = document.getElementById('moodTag');
-  const toastEl  = document.getElementById('toast');
+  const statsEl = document.getElementById('stats');
+  const moodTag = document.getElementById('moodTag');
+  const toastEl = document.getElementById('toast');
   const headerName = document.getElementById('headerName');
+  const ageDisplay = document.getElementById('ageDisplay');
   const startScreen = document.getElementById('startScreen');
   const petOptions = document.querySelectorAll('.pet-card');
   const nameInput = document.getElementById('petNameInput');
   const startBtn = document.getElementById('startBtn');
-  
   const fills = {}, vals = {};
 
   STAT_DEFS.forEach(d => {
     const row = document.createElement('div');
     row.className = 'stat';
-    row.innerHTML =
-      '<span class="ico">' + d.icon + '</span>' +
-      '<div class="track"><div class="fill"></div></div>' +
-      '<span class="val">--</span>';
+    row.innerHTML = '<span class="ico">' + d.icon + '</span><div class="track"><div class="fill"></div></div><span class="val">--</span>';
     statsEl.appendChild(row);
-    fills[d.key] = row.querySelector('.fill');
-    vals[d.key]  = row.querySelector('.val');
+    fills[d.key] = row.querySelector('.fill'); vals[d.key] = row.querySelector('.val');
   });
 
   function refreshUI() {
+    // 更新年龄显示
+    ageDisplay.textContent = Math.floor(S.age) + ' 岁';
+    
     STAT_DEFS.forEach(d => {
       const v = S[d.key];
       fills[d.key].style.width = v + '%';
@@ -1000,154 +689,126 @@
 
     const avg = (S.hunger + S.mood + S.energy + S.clean) / 4;
     let txt = '开心', cls = '';
-    if (S.energy < 20)            { txt = '困了…';  cls = 'warn'; }
-    else if (S.hunger < 25)       { txt = '好饿…';  cls = 'warn'; }
-    else if (S.clean < 25)        { txt = '脏兮兮';  cls = 'warn'; }
-    else if (S.mood < 35)         { txt = '不开心';  cls = 'bad'; }
-    else if (avg > 75)            { txt = '超幸福';  cls = ''; }
-    else if (avg > 50)            { txt = '还不错';  cls = ''; }
-
+    if (S.energy < 20) { txt = '困了…'; cls = 'warn'; }
+    else if (S.hunger < 25) { txt = '好饿…'; cls = 'warn'; }
+    else if (S.clean < 25) { txt = '脏兮兮'; cls = 'warn'; }
+    else if (S.mood < 35) { txt = '不开心'; cls = 'bad'; }
+    else if (avg > 75) { txt = '超幸福'; cls = ''; }
+    else if (avg > 50) { txt = '还不错'; cls = ''; }
     moodTag.textContent = txt;
     moodTag.className = 'mood-tag ' + cls;
   }
 
   let toastTimer = null;
   function toast(msg) {
-    toastEl.textContent = msg;
-    toastEl.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1400);
+    toastEl.textContent = msg; toastEl.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1400);
   }
 
   /* ---- 选择界面逻辑 ---- */
   let selectedType = null;
-
   petOptions.forEach(card => {
     card.addEventListener('click', () => {
       petOptions.forEach(c => c.classList.remove('active'));
-      card.classList.add('active');
-      selectedType = card.dataset.type;
-      checkStartReady();
+      card.classList.add('active'); selectedType = card.dataset.type; checkStartReady();
     });
   });
-
   nameInput.addEventListener('input', checkStartReady);
-
   function checkStartReady() {
-    if (selectedType && nameInput.value.trim().length > 0) {
-      startBtn.classList.add('ready');
-    } else {
-      startBtn.classList.remove('ready');
-    }
+    if (selectedType && nameInput.value.trim().length > 0) startBtn.classList.add('ready');
+    else startBtn.classList.remove('ready');
   }
 
   startBtn.addEventListener('click', () => {
     if (!selectedType || !nameInput.value.trim()) return;
-    
-    S.petType = selectedType;
-    S.petName = nameInput.value.trim();
-    
+    S.petType = selectedType; S.petName = nameInput.value.trim();
+    S.age = 0; // 新出生
     saveState();
     headerName.textContent = S.petName;
     startScreen.classList.add('hidden');
-    
     toast('欢迎 ' + S.petName + ' 来到新家！');
-    refreshUI();
-    resize();
+    refreshUI(); resize();
+    initAudio(); // 用户点击，激活音频上下文
   });
 
   /* ---- 互动动作 ---- */
   function doAction(act) {
     const cx = W / 2, cy = H * 0.6;
     anim.bounce = 1;
+    playSynthSound(); // 每次互动都有声音
 
-    // 根据宠物类型定制反馈
+    const stage = getAgeStage();
+    const stageName = stage === 'baby' ? '幼年' : (stage === 'elder' ? '老年' : '成年');
+
     let feedMsg = '🍎 吃得津津有味 +22';
     let playMsg = '🎾 玩得好开心 +22';
     let cleanMsg = '🫧 香喷喷 +32';
     let sleepMsg = '💤 呼…呼… +35 精力';
 
+    // 幼年和老年吃的少，成年吃得多
+    let feedAmount = stage === 'baby' ? 15 : (stage === 'elder' ? 12 : 22);
+    let playMood = stage === 'baby' ? 25 : (stage === 'elder' ? 15 : 22);
+    let sleepEnergy = stage === 'baby' ? 40 : (stage === 'elder' ? 25 : 35);
+
     if (S.petType === 'cat') {
-      feedMsg = '🐟 小鱼干真好吃 +22';
-      playMsg = '🧶 玩毛线球好开心 +22';
+      feedMsg = stage === 'baby' ? '🐟 狼吞虎咽地吃小鱼干' : (stage === 'elder' ? '🐟 细嚼慢咽地吃小鱼干' : '🐟 小鱼干真好吃');
     } else if (S.petType === 'dog') {
-      feedMsg = '🦴 大骨头真香 +22';
-      playMsg = '🥏 玩飞盘好快乐 +22';
+      feedMsg = stage === 'baby' ? '🦴 开心地啃着大骨头' : (stage === 'elder' ? '🦴 慢慢地啃着骨头' : '🦴 大骨头真香');
     } else if (S.petType === 'pig') {
-      feedMsg = '🍎 苹果真甜 +22';
-      playMsg = '⚽ 玩泥巴好开心 +22';
+      feedMsg = stage === 'baby' ? '🍎 哼哧哼哧吃苹果' : (stage === 'elder' ? '🍎 慢慢品尝苹果' : '🍎 苹果真甜');
     }
 
     switch (act) {
       case 'feed':
         if (S.hunger > 96) { toast('已经吃饱啦～'); break; }
-        S.hunger = clamp(S.hunger + 22);
-        S.mood   = clamp(S.mood + 4);
-        S.clean  = clamp(S.clean - 3);
+        S.hunger = clamp(S.hunger + feedAmount);
+        S.mood = clamp(S.mood + 4); S.clean = clamp(S.clean - 3);
         spawn(cx, cy, 8, 'food');
-        toast(feedMsg);
+        toast(feedMsg + ' +' + feedAmount);
         break;
 
       case 'play':
-        if (S.energy < 15) {
-          S.mood = clamp(S.mood - 3);
-          toast('😵 太累了，先睡一会儿吧…');
-          break;
-        }
-        S.mood   = clamp(S.mood + 22);
-        S.energy = clamp(S.energy - 12);
-        S.hunger = clamp(S.hunger - 8);
+        if (S.energy < 15) { S.mood = clamp(S.mood - 3); toast('😵 太累了，先睡一会儿吧…'); break; }
+        S.mood = clamp(S.mood + playMood); S.energy = clamp(S.energy - 12); S.hunger = clamp(S.hunger - 8);
         spawn(cx, cy, 9, 'heart');
-        toast(playMsg);
+        toast(playMsg + ' +' + playMood);
         break;
 
       case 'clean':
         if (S.clean > 96) { toast('已经很干净啦～'); break; }
-        S.clean = clamp(S.clean + 32);
-        S.mood  = clamp(S.mood + 6);
+        S.clean = clamp(S.clean + 32); S.mood = clamp(S.mood + 6);
         spawn(cx, cy, 10, 'bubble');
         toast(cleanMsg);
         break;
 
       case 'sleep':
-        S.energy = clamp(S.energy + 35);
-        S.mood   = clamp(S.mood + 3);
-        anim.sleep = 2200;
-        spawn(cx, cy, 5, 'spark');
-        toast(sleepMsg);
+        S.energy = clamp(S.energy + sleepEnergy); S.mood = clamp(S.mood + 3);
+        anim.sleep = 2200; spawn(cx, cy, 5, 'spark');
+        toast(sleepMsg + ' +' + sleepEnergy);
         break;
     }
-
-    refreshUI();
-    saveState();
+    refreshUI(); saveState();
   }
 
   document.querySelectorAll('.act').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      doAction(btn.dataset.act);
-      if (navigator.vibrate) navigator.vibrate(12);
-    });
+    btn.addEventListener('click', e => { e.preventDefault(); doAction(btn.dataset.act); if (navigator.vibrate) navigator.vibrate(12); });
   });
 
   /* ---- 摸一摸 ---- */
   canvas.addEventListener('pointerdown', e => {
     if (!S.petType) return;
     const r = canvas.getBoundingClientRect();
-    const x = e.clientX - r.left;
-    const y = e.clientY - r.top;
+    const x = e.clientX - r.left, y = e.clientY - r.top;
     const dx = x - petHit.x, dy = y - petHit.y;
     if (dx * dx + dy * dy <= petHit.r * petHit.r) {
-      anim.bounce = 1;
-      S.mood = clamp(S.mood + 2);
+      anim.bounce = 1; S.mood = clamp(S.mood + 2);
       spawn(petHit.x, petHit.y - petHit.r * 0.4, 5, 'heart');
-      refreshUI();
-      saveState();
+      playSynthSound(); // 摸它也叫一声
+      refreshUI(); saveState();
       if (navigator.vibrate) navigator.vibrate(8);
     }
   });
 
-  /* ---- 视线跟随 ---- */
   stage.addEventListener('pointermove', e => {
     if (!S.petType) return;
     const r = canvas.getBoundingClientRect();
@@ -1156,41 +817,26 @@
     anim.lookTY = clamp(((e.clientY - r.top) / H - 0.5) * 2, -1, 1);
   });
 
-  stage.addEventListener('pointerleave', () => {
-    anim.lookTX = 0;
-    anim.lookTY = 0;
-  });
+  stage.addEventListener('pointerleave', () => { anim.lookTX = 0; anim.lookTY = 0; });
 
   /* =========================================================
      启动逻辑
   ========================================================= */
   function init() {
     if (S.petType) {
-      // 如果之前已经选择过宠物，直接跳过选择界面
       startScreen.classList.add('hidden');
       headerName.textContent = S.petName;
     } else {
-      // 首次进入，显示选择界面
       headerName.textContent = '等待领养...';
     }
     refreshUI();
   }
 
-  resize();
-  setTimeout(resize, 60);
-  init();
-
-  setInterval(() => {
-    refreshUI();
-  }, 260);
-
+  resize(); setTimeout(resize, 60); init();
+  setInterval(() => { refreshUI(); }, 260);
   setInterval(saveState, 5000);
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) saveState();
-  });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) saveState(); });
   window.addEventListener('pagehide', saveState);
-
   requestAnimationFrame(loop);
 
 })();
