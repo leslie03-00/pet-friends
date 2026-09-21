@@ -91,18 +91,146 @@
   }
   .act:active{transform:scale(.93);background:rgba(255,255,255,.18)}
   .act .emoji{font-size:20px;line-height:1;filter:drop-shadow(0 2px 5px rgba(0,0,0,.4))}
-  .act:nth-child(1):active{box-shadow:0 0 20px rgba(255,180,84,.35)}
-  .act:nth-child(2):active{box-shadow:0 0 20px rgba(255,126,179,.35)}
-  .act:nth-child(3):active{box-shadow:0 0 20px rgba(110,201,255,.35)}
-  .act:nth-child(4):active{box-shadow:0 0 20px rgba(167,139,250,.35)}
+
+  /* ---------- 选择界面 ---------- */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: #0d1020;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    transition: opacity 0.5s ease, visibility 0.5s;
+  }
+  .overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .overlay h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, #6ee7b7, #7dd3fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .overlay p {
+    font-size: 13px;
+    color: #93a1c4;
+    margin-bottom: 24px;
+  }
+  .pet-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 360px;
+    margin-bottom: 24px;
+  }
+  .pet-card {
+    background: rgba(255,255,255,.05);
+    border: 2px solid rgba(255,255,255,.1);
+    border-radius: 18px;
+    padding: 16px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .pet-card:hover {
+    background: rgba(255,255,255,.1);
+  }
+  .pet-card.active {
+    border-color: #6ee7b7;
+    background: rgba(110,231,183,.15);
+    box-shadow: 0 0 20px rgba(110,231,183,.2);
+    transform: translateY(-4px);
+  }
+  .pet-card .emoji-icon {
+    font-size: 36px;
+  }
+  .pet-card .pet-label {
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .name-input {
+    width: 100%;
+    max-width: 360px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.15);
+    background: rgba(0,0,0,.3);
+    color: #fff;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    text-align: center;
+    margin-bottom: 20px;
+    transition: border-color 0.3s;
+  }
+  .name-input:focus {
+    border-color: #6ee7b7;
+  }
+  .start-btn {
+    width: 100%;
+    max-width: 360px;
+    padding: 15px;
+    border-radius: 16px;
+    border: none;
+    background: linear-gradient(135deg, #6ee7b7, #3b82f6);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.3s;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .start-btn.ready {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .start-btn.ready:active {
+    transform: scale(0.96);
+  }
 </style>
 </head>
 <body>
 
 <div class="app">
+  <!-- 选择界面遮罩 -->
+  <div class="overlay" id="startScreen">
+    <h1>领养你的小伙伴</h1>
+    <p>选择一只喜欢的宠物，给它取个名字吧</p>
+    
+    <div class="pet-options" id="petOptions">
+      <div class="pet-card" data-type="cat">
+        <span class="emoji-icon">🐱</span>
+        <span class="pet-label">小猫</span>
+      </div>
+      <div class="pet-card" data-type="dog">
+        <span class="emoji-icon">🐶</span>
+        <span class="pet-label">小狗</span>
+      </div>
+      <div class="pet-card" data-type="pig">
+        <span class="emoji-icon">🐷</span>
+        <span class="pet-label">小猪</span>
+      </div>
+    </div>
+
+    <input type="text" id="petNameInput" class="name-input" placeholder="给它取个名字..." maxlength="8" autocomplete="off">
+    <button class="start-btn" id="startBtn">开始陪伴</button>
+  </div>
+
   <div class="header">
     <span class="avatar"></span>
-    <span class="pet-name">小糯米</span>
+    <span class="pet-name" id="headerName">小糯米</span>
     <span class="mood-tag" id="moodTag">开心</span>
   </div>
 
@@ -126,29 +254,31 @@
 (function () {
   'use strict';
 
-  /* =========================================================
-     工具
-  ========================================================= */
   const clamp = (v, a = 0, b = 100) => (v < a ? a : v > b ? b : v);
   const rand  = (a, b) => a + Math.random() * (b - a);
 
   /* =========================================================
      存档 / 状态
   ========================================================= */
-  const SAVE_KEY = 'epet_save_v1';
-  const DECAY = { hunger: 2.0, mood: 1.5, energy: 1.0, clean: 1.2 }; // 每分钟衰减
+  const SAVE_KEY = 'epet_save_v2'; // 更新版本号，防止旧存档冲突
+  const DECAY = { hunger: 2.0, mood: 1.5, energy: 1.0, clean: 1.2 };
 
   function freshState() {
-    return { hunger: 85, mood: 85, energy: 85, clean: 85, last: Date.now() };
+    return { 
+      petType: null, // null, 'cat', 'dog', 'pig'
+      petName: '小糯米',
+      hunger: 85, mood: 85, energy: 85, clean: 85, 
+      last: Date.now() 
+    };
   }
 
   function loadState() {
     let s = null;
     try { s = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); } catch (e) { s = null; }
-    if (!s || typeof s.hunger !== 'number') return freshState();
+    if (!s || typeof s.hunger !== 'number' || !s.petType) return freshState();
 
     const now = Date.now();
-    const mins = Math.max(0, Math.min((now - (s.last || now)) / 60000, 720)); // 最多补算 12 小时
+    const mins = Math.max(0, Math.min((now - (s.last || now)) / 60000, 720));
     for (const k in DECAY) s[k] = clamp((typeof s[k] === 'number' ? s[k] : 80) - DECAY[k] * mins);
     s.last = now;
     return s;
@@ -191,11 +321,11 @@
      动画状态
   ========================================================= */
   const anim = {
-    bounce: 0,          // 1 -> 0 跳跃进度
+    bounce: 0,
     blinking: false,
     blinkT: 0,
     blinkNext: 1800,
-    sleep: 0,           // >0 显示 zzz
+    sleep: 0,
     lookX: 0, lookY: 0,
     lookTX: 0, lookTY: 0
   };
@@ -260,10 +390,6 @@
         ctx.strokeStyle = '#8fd8ff';
         ctx.lineWidth = 1.6;
         ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(-p.size * 0.18, -p.size * 0.18, p.size * 0.16, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,.75)';
-        ctx.fill();
       } else if (p.kind === 'food') {
         ctx.fillStyle = '#ffb454';
         ctx.beginPath();
@@ -285,11 +411,8 @@
   const stars = [];
   for (let i = 0; i < 38; i++) {
     stars.push({
-      x: Math.random(),
-      y: Math.random() * 0.72,
-      r: rand(0.5, 1.6),
-      ph: Math.random() * Math.PI * 2,
-      sp: rand(0.4, 1.5)
+      x: Math.random(), y: Math.random() * 0.72,
+      r: rand(0.5, 1.6), ph: Math.random() * Math.PI * 2, sp: rand(0.4, 1.5)
     });
   }
 
@@ -304,39 +427,28 @@
   }
 
   /* =========================================================
-     绘制：耳朵 / 眼睛
+     绘制工具：毛发纹理、眼睛等
   ========================================================= */
-  function drawEar(x, y, w, h, rot, fill, stroke) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(rot);
-    ctx.beginPath();
-    ctx.moveTo(-w / 2, 0);
-    ctx.quadraticCurveTo(-w * 0.44, -h * 0.84, 0, -h);
-    ctx.quadraticCurveTo(w * 0.44, -h * 0.84, w / 2, 0);
-    ctx.quadraticCurveTo(0, h * 0.3, -w / 2, 0);
-    ctx.closePath();
-    ctx.fillStyle = fill;
-    ctx.fill();
-    ctx.lineWidth = Math.max(2, w * 0.09);
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = stroke;
-    ctx.stroke();
-
-    // 内耳
-    ctx.beginPath();
-    ctx.moveTo(-w * 0.26, -h * 0.08);
-    ctx.quadraticCurveTo(-w * 0.2, -h * 0.62, 0, -h * 0.72);
-    ctx.quadraticCurveTo(w * 0.2, -h * 0.62, w * 0.26, -h * 0.08);
-    ctx.quadraticCurveTo(0, h * 0.06, -w * 0.26, -h * 0.08);
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(255,150,175,.35)';
-    ctx.fill();
-    ctx.restore();
+  // 绘制毛茸茸的边缘效果
+  function drawFurEdge(cx, cy, w, h, count, color) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * Math.PI * 2;
+      const r = 1 + Math.random() * 0.15;
+      const x1 = cx + Math.cos(angle) * w * 0.9 * r;
+      const y1 = cy + Math.sin(angle) * h * 0.9 * r;
+      const x2 = cx + Math.cos(angle) * w * 1.05 * r;
+      const y2 = cy + Math.sin(angle) * h * 1.05 * r;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
   }
 
   function drawEye(x, y, r, blink, happy) {
-    // 开心时画 ^ ^
     if (happy && blink < 0.05) {
       ctx.beginPath();
       ctx.arc(x, y + r * 0.62, r * 0.98, Math.PI * 1.14, Math.PI * 1.86);
@@ -349,7 +461,6 @@
 
     const ry = r * (1 - blink * 0.88);
     if (ry < 0.6) {
-      // 完全闭眼：一条弧线
       ctx.beginPath();
       ctx.arc(x, y - r * 0.3, r * 0.85, Math.PI * 0.15, Math.PI * 0.85);
       ctx.strokeStyle = '#2b3a36';
@@ -359,33 +470,393 @@
       return;
     }
 
+    // 大眼珠
     ctx.beginPath();
     ctx.ellipse(x, y, r, ry, 0, 0, Math.PI * 2);
     ctx.fillStyle = '#2b3a36';
     ctx.fill();
 
+    // 高光
     if (blink < 0.4) {
       ctx.beginPath();
       ctx.arc(x - r * 0.32, y - r * 0.34, r * 0.3, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(255,255,255,.92)';
       ctx.fill();
+      ctx.beginPath();
+      ctx.arc(x + r * 0.2, y + r * 0.2, r * 0.12, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,.7)';
+      ctx.fill();
     }
+  }
+
+  /* =========================================================
+     绘制不同宠物
+  ========================================================= */
+  // 1. 小猫 (参考图1，带有虎斑纹和白色毛发)
+  function drawCat(cx, cy, bw, bh, blink, happy) {
+    const baseColor = '#f5f0eb'; // 米白底色
+    const stripeColor = '#c47a3b'; // 橘棕色虎斑
+    const darkStripe = '#4a3b32'; // 深色纹理
+    const pinkNose = '#ff9eb5';
+
+    // 尾巴
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx + bw * 0.9, cy + bh * 0.8);
+    ctx.quadraticCurveTo(cx + bw * 1.6, cy + bh * 0.2, cx + bw * 1.3, cy - bh * 0.6);
+    ctx.strokeStyle = stripeColor;
+    ctx.lineWidth = bw * 0.15;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    // 尾巴上的毛
+    for(let i=0;i<10;i++){
+      const t = i/10;
+      const tx = cx + bw * 0.9 + (bw*0.4)*t;
+      const ty = cy + bh * 0.8 - (bh*1.4)*t;
+      ctx.beginPath();
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(tx + rand(-5,5), ty + rand(-5,5));
+      ctx.strokeStyle = darkStripe;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // 身体（毛茸茸的轮廓）
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 0, 0, Math.PI * 2);
+    ctx.fillStyle = baseColor;
+    ctx.fill();
+    // 毛发边缘
+    drawFurEdge(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 60, 'rgba(200,190,180,0.6)');
+    
+    // 虎斑色块
+    ctx.beginPath();
+    ctx.ellipse(cx - bw * 0.3, cy + bh * 0.1, bw * 0.5, bh * 0.6, -0.3, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(196,122,59,0.4)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + bw * 0.4, cy + bh * 0.3, bw * 0.4, bh * 0.5, 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(74,59,50,0.3)';
+    ctx.fill();
+    ctx.restore();
+
+    // 耳朵
+    const earY = cy - bh * 0.8;
+    const earW = bw * 0.5;
+    const earH = bh * 0.6;
+    // 左耳
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.5, earY);
+    ctx.lineTo(cx - bw * 0.8, earY - earH);
+    ctx.lineTo(cx - bw * 0.1, earY - earH * 0.8);
+    ctx.closePath();
+    ctx.fillStyle = baseColor;
+    ctx.fill();
+    ctx.strokeStyle = stripeColor;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // 左耳内耳
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.48, earY);
+    ctx.lineTo(cx - bw * 0.7, earY - earH * 0.8);
+    ctx.lineTo(cx - bw * 0.2, earY - earH * 0.7);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(255,150,175,0.4)';
+    ctx.fill();
+
+    // 右耳
+    ctx.beginPath();
+    ctx.moveTo(cx + bw * 0.5, earY);
+    ctx.lineTo(cx + bw * 0.8, earY - earH);
+    ctx.lineTo(cx + bw * 0.1, earY - earH * 0.8);
+    ctx.closePath();
+    ctx.fillStyle = baseColor;
+    ctx.fill();
+    ctx.strokeStyle = stripeColor;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // 右耳内耳
+    ctx.beginPath();
+    ctx.moveTo(cx + bw * 0.48, earY);
+    ctx.lineTo(cx + bw * 0.7, earY - earH * 0.8);
+    ctx.lineTo(cx + bw * 0.2, earY - earH * 0.7);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(255,150,175,0.4)';
+    ctx.fill();
+
+    // 眼睛
+    const eyeY = cy - bh * 0.1;
+    const eyeGap = bw * 0.35;
+    const eyeR = bw * 0.13;
+    drawEye(cx - eyeGap, eyeY, eyeR, blink, happy);
+    drawEye(cx + eyeGap, eyeY, eyeR, blink, happy);
+
+    // 鼻子和嘴巴
+    const noseY = cy + bh * 0.15;
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.1, noseY);
+    ctx.lineTo(cx + bw * 0.1, noseY);
+    ctx.lineTo(cx, noseY + bh * 0.05);
+    ctx.closePath();
+    ctx.fillStyle = pinkNose;
+    ctx.fill();
+
+    // 嘴巴
+    ctx.beginPath();
+    ctx.moveTo(cx, noseY + bh * 0.05);
+    if (happy) {
+      ctx.arc(cx - bw * 0.1, noseY + bh * 0.1, bw * 0.1, Math.PI * 1.5, Math.PI * 2);
+      ctx.arc(cx + bw * 0.1, noseY + bh * 0.1, bw * 0.1, Math.PI, Math.PI * 1.5);
+    } else {
+      ctx.arc(cx - bw * 0.1, noseY + bh * 0.15, bw * 0.1, 0, Math.PI);
+      ctx.arc(cx + bw * 0.1, noseY + bh * 0.15, bw * 0.1, 0, Math.PI);
+    }
+    ctx.strokeStyle = '#2b3a36';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 胡须
+    ctx.strokeStyle = 'rgba(100,100,100,0.5)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 3; i++) {
+      const wy = noseY + i * 5 - 5;
+      ctx.beginPath();
+      ctx.moveTo(cx - bw * 0.15, wy);
+      ctx.lineTo(cx - bw * 0.7, wy - 10 + i * 5);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx + bw * 0.15, wy);
+      ctx.lineTo(cx + bw * 0.7, wy - 10 + i * 5);
+      ctx.stroke();
+    }
+  }
+
+  // 2. 小狗 (参考图3，长垂耳，白底棕块)
+  function drawDog(cx, cy, bw, bh, blink, happy) {
+    const baseColor = '#fdfbf7';
+    const brownColor = '#a06b44';
+    const darkBrown = '#6b4423';
+
+    // 身体
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 0, 0, Math.PI * 2);
+    ctx.fillStyle = baseColor;
+    ctx.fill();
+    drawFurEdge(cx, cy + bh * 0.2, bw * 1.05, bh * 0.95, 60, 'rgba(180,160,140,0.5)');
+    
+    // 棕色斑块
+    ctx.beginPath();
+    ctx.ellipse(cx - bw * 0.4, cy + bh * 0.3, bw * 0.4, bh * 0.5, 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(160,107,68,0.5)';
+    ctx.fill();
+    ctx.restore();
+
+    // 垂耳 (特色)
+    const earY = cy - bh * 0.6;
+    const earW = bw * 0.5;
+    const earH = bh * 0.8;
+
+    // 左垂耳
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.5, earY);
+    ctx.quadraticCurveTo(cx - bw * 1.2, earY + bh * 0.2, cx - bw * 0.9, earY + earH);
+    ctx.quadraticCurveTo(cx - bw * 0.6, earY + earH * 0.6, cx - bw * 0.3, earY + bh * 0.1);
+    ctx.closePath();
+    ctx.fillStyle = brownColor;
+    ctx.fill();
+    // 耳朵毛
+    drawFurEdge(cx - bw * 0.7, earY + earH * 0.5, bw * 0.3, bh * 0.4, 30, darkBrown);
+    ctx.restore();
+
+    // 右垂耳
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx + bw * 0.5, earY);
+    ctx.quadraticCurveTo(cx + bw * 1.2, earY + bh * 0.2, cx + bw * 0.9, earY + earH);
+    ctx.quadraticCurveTo(cx + bw * 0.6, earY + earH * 0.6, cx + bw * 0.3, earY + bh * 0.1);
+    ctx.closePath();
+    ctx.fillStyle = brownColor;
+    ctx.fill();
+    drawFurEdge(cx + bw * 0.7, earY + earH * 0.5, bw * 0.3, bh * 0.4, 30, darkBrown);
+    ctx.restore();
+
+    // 额头白毛
+    ctx.beginPath();
+    ctx.ellipse(cx, cy - bh * 0.4, bw * 0.2, bh * 0.25, 0, 0, Math.PI * 2);
+    ctx.fillStyle = baseColor;
+    ctx.fill();
+
+    // 眼睛
+    const eyeY = cy - bh * 0.1;
+    const eyeGap = bw * 0.35;
+    const eyeR = bw * 0.12;
+    drawEye(cx - eyeGap, eyeY, eyeR, blink, happy);
+    drawEye(cx + eyeGap, eyeY, eyeR, blink, happy);
+
+    // 大黑鼻子
+    const noseY = cy + bh * 0.2;
+    ctx.beginPath();
+    ctx.ellipse(cx, noseY, bw * 0.12, bh * 0.08, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fill();
+    // 鼻子高光
+    ctx.beginPath();
+    ctx.ellipse(cx - bw * 0.03, noseY - bh * 0.02, bw * 0.03, bh * 0.02, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.fill();
+
+    // 嘴巴
+    ctx.beginPath();
+    ctx.moveTo(cx, noseY + bh * 0.08);
+    if (happy) {
+      ctx.arc(cx - bw * 0.08, noseY + bh * 0.12, bw * 0.08, Math.PI * 1.5, Math.PI * 2);
+      ctx.arc(cx + bw * 0.08, noseY + bh * 0.12, bw * 0.08, Math.PI, Math.PI * 1.5);
+    } else {
+      ctx.arc(cx - bw * 0.08, noseY + bh * 0.15, bw * 0.08, 0, Math.PI);
+      ctx.arc(cx + bw * 0.08, noseY + bh * 0.15, bw * 0.08, 0, Math.PI);
+    }
+    ctx.strokeStyle = '#2b3a36';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  // 3. 小猪 (参考图2，粉色圆润)
+  function drawPig(cx, cy, bw, bh, blink, happy) {
+    const pinkBody = '#ffb6c1';
+    const darkPink = '#ff8fab';
+    const nosePink = '#ff6b8b';
+
+    // 身体
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + bh * 0.15, bw * 1.1, bh * 0.95, 0, 0, Math.PI * 2);
+    ctx.fillStyle = pinkBody;
+    ctx.fill();
+    drawFurEdge(cx, cy + bh * 0.15, bw * 1.1, bh * 0.95, 50, 'rgba(255,140,170,0.6)');
+    
+    // 肚子颜色浅一点
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + bh * 0.3, bw * 0.6, bh * 0.5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fill();
+    ctx.restore();
+
+    // 圆耳朵
+    const earY = cy - bh * 0.75;
+    // 左耳
+    ctx.beginPath();
+    ctx.ellipse(cx - bw * 0.6, earY, bw * 0.25, bh * 0.2, -0.3, 0, Math.PI * 2);
+    ctx.fillStyle = darkPink;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx - bw * 0.6, earY, bw * 0.15, bh * 0.12, -0.3, 0, Math.PI * 2);
+    ctx.fillStyle = '#ff9eb5';
+    ctx.fill();
+
+    // 右耳
+    ctx.beginPath();
+    ctx.ellipse(cx + bw * 0.6, earY, bw * 0.25, bh * 0.2, 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = darkPink;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + bw * 0.6, earY, bw * 0.15, bh * 0.12, 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = '#ff9eb5';
+    ctx.fill();
+
+    // 眼睛 (小猪用豆豆眼更可爱)
+    const eyeY = cy - bh * 0.1;
+    const eyeGap = bw * 0.4;
+    const eyeR = bw * 0.1;
+    
+    if (blink > 0.5) {
+      // 闭眼
+      ctx.beginPath();
+      ctx.arc(cx - eyeGap, eyeY - eyeR * 0.3, eyeR * 0.8, Math.PI * 0.15, Math.PI * 0.85);
+      ctx.strokeStyle = '#2b3a36';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(cx + eyeGap, eyeY - eyeR * 0.3, eyeR * 0.8, Math.PI * 0.15, Math.PI * 0.85);
+      ctx.stroke();
+    } else {
+      // 圆眼睛
+      ctx.beginPath();
+      ctx.arc(cx - eyeGap, eyeY, eyeR, 0, Math.PI * 2);
+      ctx.fillStyle = '#2b3a36';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cx - eyeGap - eyeR*0.3, eyeY - eyeR*0.3, eyeR*0.35, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(cx + eyeGap, eyeY, eyeR, 0, Math.PI * 2);
+      ctx.fillStyle = '#2b3a36';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cx + eyeGap - eyeR*0.3, eyeY - eyeR*0.3, eyeR*0.35, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+    }
+
+    // 猪鼻子 (标志性)
+    const noseY = cy + bh * 0.2;
+    ctx.beginPath();
+    ctx.ellipse(cx, noseY, bw * 0.2, bh * 0.13, 0, 0, Math.PI * 2);
+    ctx.fillStyle = nosePink;
+    ctx.fill();
+    ctx.strokeStyle = '#e04a6a';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // 鼻孔
+    ctx.beginPath();
+    ctx.ellipse(cx - bw * 0.08, noseY, bw * 0.04, bh * 0.05, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#c23a5a';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + bw * 0.08, noseY, bw * 0.04, bh * 0.05, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#c23a5a';
+    ctx.fill();
+
+    // 嘴巴 (在鼻子下面)
+    ctx.beginPath();
+    if (happy) {
+      ctx.arc(cx, noseY + bh * 0.12, bw * 0.08, Math.PI * 1.2, Math.PI * 1.8);
+    } else {
+      ctx.arc(cx, noseY + bh * 0.15, bw * 0.08, 0.2, Math.PI - 0.2);
+    }
+    ctx.strokeStyle = '#2b3a36';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 腮红
+    ctx.fillStyle = 'rgba(255,100,130,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(cx - eyeGap - bw*0.15, eyeY + bh * 0.15, bw * 0.15, bh * 0.08, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + eyeGap + bw*0.15, eyeY + bh * 0.15, bw * 0.15, bh * 0.08, 0, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   /* =========================================================
      主渲染
   ========================================================= */
   function render(now) {
-    if (!W || !H) return;
+    if (!W || !H || !S.petType) return;
     ctx.clearRect(0, 0, W, H);
 
     drawStars(now);
 
-    /* ---- 尺寸与位置 ---- */
     const cx      = W / 2;
     const groundY = H * 0.84;
-    const bw      = Math.min(W * 0.29, H * 0.24);   // 半宽
-    const bh      = bw * 1.06;                      // 半高
+    const bw      = Math.min(W * 0.29, H * 0.24);
+    const bh      = bw * 1.06;
 
     const p     = 1 - anim.bounce;
     const jump  = -Math.sin(p * Math.PI) * bh * 0.52;
@@ -394,74 +865,17 @@
 
     petHit = { x: cx, y: cy, r: bw * 1.25 };
 
-    /* ---- 心情判定 ---- */
     const sad      = S.mood < 35 || S.hunger < 22 || S.energy < 18;
     const happy    = S.mood > 62 && !sad;
-    const hue      = sad ? 205 : 158;
-    const sat      = sad ? 38 : 58;
-    const lit      = sad ? 64 : 68;
 
-    const topC    = 'hsl(' + hue + ',' + sat + '%,' + (lit + 15) + '%)';
-    const midC    = 'hsl(' + hue + ',' + sat + '%,' + lit + '%)';
-    const botC    = 'hsl(' + hue + ',' + (sat + 6) + '%,' + (lit - 22) + '%)';
-    const earC    = 'hsl(' + hue + ',' + sat + '%,' + (lit - 2) + '%)';
-    const strokeC = 'hsl(' + hue + ',' + (sat - 16) + '%,' + (lit - 40) + '%)';
-
-    /* ---- 影子 ---- */
+    // 影子
     const sk = 1 - Math.sin(p * Math.PI) * 0.5;
     ctx.beginPath();
     ctx.ellipse(cx, groundY + bh * 0.05, bw * 0.88 * sk, bw * 0.17 * sk, 0, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(0,0,0,.32)';
     ctx.fill();
 
-    /* ---- 耳朵 ---- */
-    const earW = bw * 0.54, earH = bh * 0.64;
-    const earY = cy - bh * 0.76;
-    drawEar(cx - bw * 0.56, earY, earW, earH, -0.34, earC, strokeC);
-    drawEar(cx + bw * 0.56, earY, earW, earH,  0.34, earC, strokeC);
-
-    /* ---- 身体 ---- */
-    ctx.save();
-    ctx.shadowColor = 'hsla(' + hue + ',80%,60%,.55)';
-    ctx.shadowBlur  = bw * 0.7;
-
-    ctx.beginPath();
-    ctx.moveTo(cx - bw, cy + bh * 0.1);
-    ctx.quadraticCurveTo(cx - bw * 1.06, cy - bh * 0.96, cx, cy - bh);
-    ctx.quadraticCurveTo(cx + bw * 1.06, cy - bh * 0.96, cx + bw, cy + bh * 0.1);
-    ctx.quadraticCurveTo(cx + bw * 0.96, cy + bh * 1.06, cx, cy + bh);
-    ctx.quadraticCurveTo(cx - bw * 0.96, cy + bh * 1.06, cx - bw, cy + bh * 0.1);
-    ctx.closePath();
-
-    const bg = ctx.createLinearGradient(cx - bw, cy - bh, cx + bw * 0.5, cy + bh);
-    bg.addColorStop(0, topC);
-    bg.addColorStop(0.55, midC);
-    bg.addColorStop(1, botC);
-    ctx.fillStyle = bg;
-    ctx.fill();
-
-    ctx.shadowColor = 'transparent';
-    ctx.shadowBlur  = 0;
-    ctx.lineWidth   = Math.max(2.5, bw * 0.036);
-    ctx.lineJoin    = 'round';
-    ctx.strokeStyle = strokeC;
-    ctx.stroke();
-    ctx.restore();
-
-    /* ---- 高光 ---- */
-    ctx.save();
-    ctx.globalAlpha = 0.5;
-    ctx.beginPath();
-    ctx.ellipse(cx - bw * 0.4, cy - bh * 0.46, bw * 0.22, bh * 0.14, -0.55, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
-    ctx.fill();
-    ctx.restore();
-
-    /* ---- 面部 ---- */
-    const eyeY  = cy - bh * 0.16;
-    const eyeGap = bw * 0.42;
-    const eyeR  = bw * 0.14;
-
+    // 眨眼计算
     let blink = 0;
     if (anim.blinking) {
       const q = anim.blinkT / 190;
@@ -469,35 +883,16 @@
     }
     if (anim.sleep > 0) blink = 1;
 
-    const lx = anim.lookX * bw * 0.07;
-    const ly = anim.lookY * bh * 0.05;
-
-    drawEye(cx - eyeGap + lx, eyeY + ly, eyeR, blink, happy);
-    drawEye(cx + eyeGap + lx, eyeY + ly, eyeR, blink, happy);
-
-    /* 腮红 */
-    ctx.fillStyle = 'hsla(345,90%,72%,' + (sad ? 0.16 : 0.42) + ')';
-    ctx.beginPath();
-    ctx.ellipse(cx - eyeGap - bw * 0.13, eyeY + bh * 0.18, bw * 0.17, bh * 0.095, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(cx + eyeGap + bw * 0.13, eyeY + bh * 0.18, bw * 0.17, bh * 0.095, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    /* 嘴巴 */
-    const mouthY = cy + bh * 0.13;
-    ctx.beginPath();
-    if (sad) {
-      ctx.arc(cx, mouthY + bh * 0.09, bw * 0.16, Math.PI * 1.18, Math.PI * 1.82);
-    } else {
-      ctx.arc(cx, mouthY - bh * 0.02, bw * 0.15, Math.PI * 0.18, Math.PI * 0.82);
+    // 根据宠物类型绘制
+    if (S.petType === 'cat') {
+      drawCat(cx, cy, bw, bh, blink, happy);
+    } else if (S.petType === 'dog') {
+      drawDog(cx, cy, bw, bh, blink, happy);
+    } else if (S.petType === 'pig') {
+      drawPig(cx, cy, bw, bh, blink, happy);
     }
-    ctx.strokeStyle = strokeC;
-    ctx.lineWidth = Math.max(2, bw * 0.032);
-    ctx.lineCap = 'round';
-    ctx.stroke();
 
-    /* ---- 睡觉 Zzz ---- */
+    // 睡觉 Zzz
     if (anim.sleep > 0) {
       const k = 1 - anim.sleep / 2200;
       ctx.save();
@@ -513,7 +908,6 @@
       ctx.restore();
     }
 
-    /* ---- 粒子 ---- */
     drawParticles();
   }
 
@@ -521,17 +915,15 @@
      逻辑更新
   ========================================================= */
   function update(dt) {
-    const m = dt / 60000; // 分钟
+    const m = dt / 60000;
 
     S.hunger = clamp(S.hunger - DECAY.hunger * m);
     S.mood   = clamp(S.mood   - DECAY.mood   * m);
     S.energy = clamp(S.energy - DECAY.energy * m);
     S.clean  = clamp(S.clean  - DECAY.clean  * m);
 
-    // 跳跃衰减
     if (anim.bounce > 0) anim.bounce = Math.max(0, anim.bounce - dt / 520);
 
-    // 眨眼
     anim.blinkNext -= dt;
     if (!anim.blinking && anim.blinkNext <= 0) {
       anim.blinking = true;
@@ -543,10 +935,8 @@
       if (anim.blinkT > 190) { anim.blinking = false; anim.blinkT = 0; }
     }
 
-    // 睡觉计时
     if (anim.sleep > 0) anim.sleep = Math.max(0, anim.sleep - dt);
 
-    // 视线平滑
     const k = Math.min(1, dt / 130);
     anim.lookX += (anim.lookTX - anim.lookX) * k;
     anim.lookY += (anim.lookTY - anim.lookY) * k;
@@ -568,7 +958,7 @@
   }
 
   /* =========================================================
-     UI
+     UI 与 交互
   ========================================================= */
   const STAT_DEFS = [
     { key: 'hunger', icon: '🍚', color: '#ffb454' },
@@ -580,6 +970,12 @@
   const statsEl  = document.getElementById('stats');
   const moodTag  = document.getElementById('moodTag');
   const toastEl  = document.getElementById('toast');
+  const headerName = document.getElementById('headerName');
+  const startScreen = document.getElementById('startScreen');
+  const petOptions = document.querySelectorAll('.pet-card');
+  const nameInput = document.getElementById('petNameInput');
+  const startBtn = document.getElementById('startBtn');
+  
   const fills = {}, vals = {};
 
   STAT_DEFS.forEach(d => {
@@ -623,21 +1019,73 @@
     toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1400);
   }
 
-  /* =========================================================
-     互动动作
-  ========================================================= */
+  /* ---- 选择界面逻辑 ---- */
+  let selectedType = null;
+
+  petOptions.forEach(card => {
+    card.addEventListener('click', () => {
+      petOptions.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      selectedType = card.dataset.type;
+      checkStartReady();
+    });
+  });
+
+  nameInput.addEventListener('input', checkStartReady);
+
+  function checkStartReady() {
+    if (selectedType && nameInput.value.trim().length > 0) {
+      startBtn.classList.add('ready');
+    } else {
+      startBtn.classList.remove('ready');
+    }
+  }
+
+  startBtn.addEventListener('click', () => {
+    if (!selectedType || !nameInput.value.trim()) return;
+    
+    S.petType = selectedType;
+    S.petName = nameInput.value.trim();
+    
+    saveState();
+    headerName.textContent = S.petName;
+    startScreen.classList.add('hidden');
+    
+    toast('欢迎 ' + S.petName + ' 来到新家！');
+    refreshUI();
+    resize();
+  });
+
+  /* ---- 互动动作 ---- */
   function doAction(act) {
     const cx = W / 2, cy = H * 0.6;
     anim.bounce = 1;
 
+    // 根据宠物类型定制反馈
+    let feedMsg = '🍎 吃得津津有味 +22';
+    let playMsg = '🎾 玩得好开心 +22';
+    let cleanMsg = '🫧 香喷喷 +32';
+    let sleepMsg = '💤 呼…呼… +35 精力';
+
+    if (S.petType === 'cat') {
+      feedMsg = '🐟 小鱼干真好吃 +22';
+      playMsg = '🧶 玩毛线球好开心 +22';
+    } else if (S.petType === 'dog') {
+      feedMsg = '🦴 大骨头真香 +22';
+      playMsg = '🥏 玩飞盘好快乐 +22';
+    } else if (S.petType === 'pig') {
+      feedMsg = '🍎 苹果真甜 +22';
+      playMsg = '⚽ 玩泥巴好开心 +22';
+    }
+
     switch (act) {
       case 'feed':
-        if (S.hunger > 96) { toast('小糯米已经吃饱啦～'); break; }
+        if (S.hunger > 96) { toast('已经吃饱啦～'); break; }
         S.hunger = clamp(S.hunger + 22);
         S.mood   = clamp(S.mood + 4);
         S.clean  = clamp(S.clean - 3);
         spawn(cx, cy, 8, 'food');
-        toast('🍎 吃得津津有味 +22');
+        toast(feedMsg);
         break;
 
       case 'play':
@@ -650,7 +1098,7 @@
         S.energy = clamp(S.energy - 12);
         S.hunger = clamp(S.hunger - 8);
         spawn(cx, cy, 9, 'heart');
-        toast('🎾 玩得好开心 +22');
+        toast(playMsg);
         break;
 
       case 'clean':
@@ -658,7 +1106,7 @@
         S.clean = clamp(S.clean + 32);
         S.mood  = clamp(S.mood + 6);
         spawn(cx, cy, 10, 'bubble');
-        toast('🫧 香喷喷 +32');
+        toast(cleanMsg);
         break;
 
       case 'sleep':
@@ -666,7 +1114,7 @@
         S.mood   = clamp(S.mood + 3);
         anim.sleep = 2200;
         spawn(cx, cy, 5, 'spark');
-        toast('💤 呼…呼… +35 精力');
+        toast(sleepMsg);
         break;
     }
 
@@ -684,6 +1132,7 @@
 
   /* ---- 摸一摸 ---- */
   canvas.addEventListener('pointerdown', e => {
+    if (!S.petType) return;
     const r = canvas.getBoundingClientRect();
     const x = e.clientX - r.left;
     const y = e.clientY - r.top;
@@ -700,6 +1149,7 @@
 
   /* ---- 视线跟随 ---- */
   stage.addEventListener('pointermove', e => {
+    if (!S.petType) return;
     const r = canvas.getBoundingClientRect();
     if (!W || !H) return;
     anim.lookTX = clamp(((e.clientX - r.left) / W - 0.5) * 2, -1, 1);
@@ -712,11 +1162,23 @@
   });
 
   /* =========================================================
-     启动
+     启动逻辑
   ========================================================= */
+  function init() {
+    if (S.petType) {
+      // 如果之前已经选择过宠物，直接跳过选择界面
+      startScreen.classList.add('hidden');
+      headerName.textContent = S.petName;
+    } else {
+      // 首次进入，显示选择界面
+      headerName.textContent = '等待领养...';
+    }
+    refreshUI();
+  }
+
   resize();
   setTimeout(resize, 60);
-  refreshUI();
+  init();
 
   setInterval(() => {
     refreshUI();
